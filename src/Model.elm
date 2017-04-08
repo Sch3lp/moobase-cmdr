@@ -76,18 +76,12 @@ findAllImmediateChildCords hubTree =
     case hubTree of
         TreeNode hub children -> findAllImmediateChildren hubTree |> List.map (newCord hub)
 
-foldOverTree : (a -> b) -> (List b -> b) -> Tree a -> b
+foldOverTree : (a -> b) -> (b -> b -> b) -> Tree a -> b
 foldOverTree valueMapper combiner (TreeNode a children) =
-    let
-        value = valueMapper a
-        b = List.map (foldOverTree valueMapper combiner) children
-        combined = combiner b
-    in
-        combined
+    List.foldr combiner (valueMapper a) (List.map (foldOverTree valueMapper combiner) children)
 
 findAllHubsRecursive : HubTree -> List Hub
-findAllHubsRecursive (TreeNode hub children) =
-    hub :: List.concatMap findAllHubsRecursive children
+findAllHubsRecursive = foldOverTree List.singleton (++)
 
 findAllImmediateChildren : HubTree -> List Hub
 findAllImmediateChildren (TreeNode _ children) = List.map extractHub children
