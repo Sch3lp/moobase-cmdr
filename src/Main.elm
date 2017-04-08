@@ -2,16 +2,15 @@ module Main exposing(..)
 
 import Html exposing (Html)
 
-import Model exposing (Model,initialModel)
-import Update exposing (update)
-import View exposing (view)
-import Subscription exposing (subscriptions, initialWindowSizeCommand)
+import Model exposing (..)
+import Update exposing (..)
+import View exposing (..)
+import Subscription exposing (subscriptions)
 
-
-main : Program Never Model Subscription.Msg
+main : Program Never Hub Msg
 main =
   Html.program
-  { init = (initialModel, initialWindowSizeCommand)
+  { init = (newHub, Cmd.none)
   , update = update
   , view = view
   , subscriptions = subscriptions }

@@ -1,3 +1,9 @@
 module Model exposing(..)
 
-{- do general model stuff here -}
+import Color exposing (Color)
+
+type alias Hub = 
+    { color : Color 
+    , pos : (Int, Int)
+    , size : Float
+    }
