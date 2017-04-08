@@ -14,4 +14,4 @@ cp $HOME/build/robisrob/moobase-cmdr/index.html ./gh-pages/app/index.html
 cd gh-pages
 git add -A
 git commit -m "new deploy: $TRAVIS_BUILD_NUMBER" 
-git push --quiet 2> /dev/null
+git push --quiet 
