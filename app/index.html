@@ -10786,47 +10786,34 @@ var _sch3lp$moobase_cmdr$Update$IncrementForce = {ctor: 'IncrementForce'};
 var _sch3lp$moobase_cmdr$Update$AimLeft = {ctor: 'AimLeft'};
 var _sch3lp$moobase_cmdr$Update$AimRight = {ctor: 'AimRight'};
 var _sch3lp$moobase_cmdr$Update$LaunchHub = {ctor: 'LaunchHub'};
-var _sch3lp$moobase_cmdr$View$cord2Form = function (cord) {
-	var _p0 = cord.to.pos;
-	var x2 = _p0._0;
-	var y2 = _p0._1;
-	var _p1 = cord.from.pos;
-	var x1 = _p1._0;
-	var y1 = _p1._1;
-	var p = _evancz$elm_graphics$Collage$path(
-		{
-			ctor: '::',
-			_0: {
-				ctor: '_Tuple2',
-				_0: _elm_lang$core$Basics$toFloat(x1),
-				_1: _elm_lang$core$Basics$toFloat(y1)
-			},
-			_1: {
-				ctor: '::',
-				_0: {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Basics$toFloat(x2),
-					_1: _elm_lang$core$Basics$toFloat(y2)
-				},
-				_1: {ctor: '[]'}
-			}
-		});
-	return A2(_evancz$elm_graphics$Collage$traced, _evancz$elm_graphics$Collage$defaultLine, p);
+var _sch3lp$moobase_cmdr$View$posToFloat = function (_p0) {
+	var _p1 = _p0;
+	return {
+		ctor: '_Tuple2',
+		_0: _elm_lang$core$Basics$toFloat(_p1._0),
+		_1: _elm_lang$core$Basics$toFloat(_p1._1)
+	};
 };
 var _sch3lp$moobase_cmdr$View$hub2Form = function (hub) {
-	var _p2 = hub.pos;
-	var x = _p2._0;
-	var y = _p2._1;
 	var shape = _evancz$elm_graphics$Collage$circle(hub.size);
 	var form = A2(_evancz$elm_graphics$Collage$filled, _elm_lang$core$Color$blue, shape);
 	return A2(
 		_evancz$elm_graphics$Collage$move,
-		{
-			ctor: '_Tuple2',
-			_0: _elm_lang$core$Basics$toFloat(x),
-			_1: _elm_lang$core$Basics$toFloat(y)
-		},
+		_sch3lp$moobase_cmdr$View$posToFloat(hub.pos),
 		form);
+};
+var _sch3lp$moobase_cmdr$View$cord2Form = function (cord) {
+	var p = _evancz$elm_graphics$Collage$path(
+		{
+			ctor: '::',
+			_0: _sch3lp$moobase_cmdr$View$posToFloat(cord.from.pos),
+			_1: {
+				ctor: '::',
+				_0: _sch3lp$moobase_cmdr$View$posToFloat(cord.to.pos),
+				_1: {ctor: '[]'}
+			}
+		});
+	return A2(_evancz$elm_graphics$Collage$traced, _evancz$elm_graphics$Collage$defaultLine, p);
 };
 var _sch3lp$moobase_cmdr$View$createAllForms = function (model) {
 	var allCords = _sch3lp$moobase_cmdr$Model$findAllCords(model);
