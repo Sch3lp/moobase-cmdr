@@ -5,9 +5,55 @@ import Expect
 import Fuzz exposing (list, int, tuple, string)
 import String
 
+import Model exposing (..)
 
 all : Test
-all = exampleTests
+all = describe "moobase commander"
+    [ hubTests
+    , exampleTests
+    ]
+
+hubTests : Test
+hubTests =
+    describe "A hub"
+        [ describe "when adding children"
+             [ test "given a hub without children, returns a new hub with a child" <|
+                 \() ->
+                    let
+                        hubWithChildren = appendChildToHub initialHub initialHub
+                    in
+                        hubWithChildren.children |> Expect.equal (ChildHubs [initialHub])
+             ]
+          , describe "when listing its direct children"
+            [ test "given a hub without children, then no children are returned" <|
+                \() ->
+                    findAllImmediateChildren initialHub |> Expect.equal []
+            , test "given a hub with children, then return the children" <|
+                \() ->
+                    let
+                        hubWithChildren = appendChildToHub initialHub initialHub
+                    in
+                        findAllImmediateChildren hubWithChildren |> Expect.equal [initialHub]
+            , test "given a hub with grandchildren, then return only the immediate children" <|
+                \() ->
+                    let
+                        hubWithChildren = appendChildToHub initialHub initialHub
+                        hubWithGrandchildren = appendChildToHub initialHub hubWithChildren
+                    in
+                        findAllImmediateChildren hubWithGrandchildren |> Expect.equal [hubWithChildren]
+            ]
+        , describe "when listing its children recursively"
+              [ test "given a hub without children, then no children are returned" <|
+                  \() ->
+                      findAllChildrenRecursive initialHub |> Expect.equal []
+              , test "given a hub with children, then return the children" <|
+                  \() ->
+                      let
+                          hubWithChildren = appendChildToHub initialHub initialHub
+                      in
+                          findAllChildrenRecursive hubWithChildren |> Expect.equal [initialHub]
+              ]
+        ]
 
 
 exampleTests : Test
