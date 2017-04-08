@@ -3,6 +3,7 @@ module Model exposing(..)
 import Model.Animation exposing (..)
 import Model.Position exposing (..)
 import Model.Time exposing (..)
+import Model.Tree exposing (..)
 
 type alias Angle = Float
 type alias Force = Float
@@ -19,7 +20,6 @@ type alias Hub =
     , animation : Maybe AnimatingPosition
     }
 
-type Tree a = TreeNode a (List (Tree a))
 type alias HubTree = Tree Hub
 
 type alias Cord =
@@ -37,7 +37,7 @@ hubSize: Float
 hubSize = 25
 
 initialHub: HubTree
-initialHub = TreeNode (newHubAt (0,0)) []
+initialHub = newTree (newHubAt (0,0))
 
 newHubAt: Position -> Hub
 newHubAt pos =
@@ -76,22 +76,3 @@ findAllImmediateChildCords hubTree =
     case hubTree of
         TreeNode hub children -> findAllImmediateChildren hubTree |> List.map (newCord hub)
 
-foldOverTree : (a -> b) -> (b -> b -> b) -> Tree a -> b
-foldOverTree valueMapper combiner (TreeNode a children) =
-    List.foldr combiner (valueMapper a) (List.map (foldOverTree valueMapper combiner) children)
-
-findAllHubsRecursive : HubTree -> List Hub
-findAllHubsRecursive = foldOverTree List.singleton (++)
-
-findAllImmediateChildren : HubTree -> List Hub
-findAllImmediateChildren (TreeNode _ children) = List.map extractHub children
-
-extractHub : HubTree -> Hub
-extractHub (TreeNode hub _) = hub
-
-appendChildToHub: HubTree -> Hub -> HubTree
-appendChildToHub parent child =
-    let
-        (TreeNode hub existingChildren) = parent
-    in
-        (TreeNode hub ((TreeNode child []):: existingChildren))

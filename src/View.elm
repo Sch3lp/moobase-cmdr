@@ -9,6 +9,7 @@ import Svg.Attributes exposing (..)
 
 import Model exposing (..)
 import Model.Position exposing (..)
+import Model.Tree exposing (..)
 
 import Update exposing (..)
 
@@ -75,7 +76,7 @@ view model =
 createAllCircles : Model -> List (Svg.Svg msg)
 createAllCircles model = 
     let
-        allHubs = findAllHubsRecursive model.rootHub
+        allHubs = findAllElemsRecursive model.rootHub
         allCords = findAllCords model
     in
         List.map hub2Circle allHubs ++ List.map cord2View allCords

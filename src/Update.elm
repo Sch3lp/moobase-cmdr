@@ -2,6 +2,8 @@ module Update exposing(..)
 
 import Model exposing (..)
 import Model.Time exposing (TimeDelta)
+import Model.Tree exposing (..)
+
 
 
 {- do general update stuff here -}
@@ -21,8 +23,8 @@ update msg model =
         LaunchHub ->
             let
                 oldRootHub = model.rootHub
-                newHub = (newHubAt <| launch (extractHub oldRootHub) model.direction model.force)
-                newRootHub = appendChildToHub oldRootHub newHub
+                newHub = (newHubAt <| launch (extractElem oldRootHub) model.direction model.force)
+                newRootHub = appendChild oldRootHub newHub
             in
                 ({model | rootHub = newRootHub}, Cmd.none)
         AimRight ->
