@@ -14,20 +14,20 @@ import Update exposing (..)
 
 {- do general view stuff here, like start menu etc. -}
 
+toFloat: Position -> (Float, Float)
+toFloat (x, y) =  (toFloat x, toFloat y)
+
 hub2Form: Hub -> Form
 hub2Form hub =
     let
         shape = circle hub.size
         form = filled Color.blue shape
-        (x, y) = hub.pos
-    in move (toFloat x, toFloat y) form
+    in move (toFloat hub.pos) form
 
 cord2Form: Cord -> Form
 cord2Form cord =
     let
-        (x1, y1) = cord.from.pos
-        (x2, y2) = cord.to.pos
-        p = path [(toFloat x1, toFloat y1), (toFloat x2, toFloat y2)]
+        p = path [toFloat cord.from.pos, toFloat cord.to.pos]
     in traced defaultLine p
 
 view : Model -> Html.Html Msg
