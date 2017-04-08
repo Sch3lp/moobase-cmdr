@@ -38,6 +38,19 @@ cord2Form cord =
     in traced defaultLine p
 -}
 
+cord2View: Cord -> Svg.Svg msg
+cord2View cord =
+    case (cord.from.pos, cord.to.pos)
+    of ((fromX,fromY), (toX,toY)) ->
+        Svg.line
+            [ x1 <| toString fromX
+            , y1 <| toString fromY
+            , x2 <| toString toX
+            , y2 <| toString toY
+            , Html.Attributes.style [("stroke","rgb(0,255,0)"),("stroke-width","2")]
+            ]
+            [ ]
+
 view : Model -> Html.Html Msg
 view model =
     div [Html.Attributes.style [("height", "100%"), ("width", "100%")]]
@@ -62,6 +75,7 @@ createAllCircles : Model -> List (Svg.Svg msg)
 createAllCircles model = 
     let
         allHubs = (model.rootHub :: findAllChildrenRecursive model.rootHub)
+        allCords = findAllCords model
     in
-        List.map hub2Circle allHubs
+        List.map hub2Circle allHubs ++ List.map cord2View allCords
     
