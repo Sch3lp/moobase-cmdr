@@ -8,6 +8,7 @@ import Svg.Attributes exposing (..)
 
 
 import Model exposing (..)
+import Model.Position exposing (..)
 
 import Update exposing (..)
 

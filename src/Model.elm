@@ -1,8 +1,11 @@
 module Model exposing(..)
 
+import Model.Animation exposing (..)
+import Model.Position exposing (..)
+import Model.Time exposing (..)
+
 type alias Angle = Float
 type alias Force = Float
-type alias Position = (Int, Int)
 
 type alias Model =
     { rootHub: Hub
@@ -14,6 +17,7 @@ type alias Hub =
     { pos : Position
     , size : Float
     , children : ChildHubs
+    , animation : Maybe AnimatingPosition
     }
 
 type ChildHubs = ChildHubs (List Hub)
@@ -33,17 +37,14 @@ hubSize: Float
 hubSize = 25
 
 initialHub: Hub
-initialHub =
-    { pos = (0,0)
-    , size = hubSize
-    , children = ChildHubs []
-    }
+initialHub = newHubAt (0,0)
 
 newHubAt: Position -> Hub
 newHubAt pos =
     { pos = pos
     , size = hubSize
     , children = ChildHubs []
+    , animation = Nothing
     }
 
 launch: Hub -> Angle -> Force -> Position
