@@ -10623,6 +10623,14 @@ var _evancz$elm_graphics$Collage$ngon = F2(
 				f,
 				A2(_elm_lang$core$List$range, 0, n - 1)));
 	});
+var _sch3lp$moobase_cmdr$Model$newHubAt = function (pos) {
+	return {color: _elm_lang$core$Color$red, pos: pos, size: 25};
+};
+var _sch3lp$moobase_cmdr$Model$newHub = {
+	color: _elm_lang$core$Color$blue,
+	pos: {ctor: '_Tuple2', _0: 0, _1: 0},
+	size: 25
+};
 var _sch3lp$moobase_cmdr$Model$Model = function (a) {
 	return {hubs: a};
 };
@@ -10631,19 +10639,37 @@ var _sch3lp$moobase_cmdr$Model$Hub = F3(
 		return {color: a, pos: b, size: c};
 	});
 var _sch3lp$moobase_cmdr$Update$update = F2(
-	function (msg, hubs) {
+	function (msg, model) {
 		var _p0 = msg;
-		return {ctor: '_Tuple2', _0: hubs, _1: _elm_lang$core$Platform_Cmd$none};
+		var newHubs = {
+			ctor: '::',
+			_0: _sch3lp$moobase_cmdr$Model$newHubAt(
+				{ctor: '_Tuple2', _0: 100, _1: 100}),
+			_1: model.hubs
+		};
+		return {
+			ctor: '_Tuple2',
+			_0: _elm_lang$core$Native_Utils.update(
+				model,
+				{hubs: newHubs}),
+			_1: _elm_lang$core$Platform_Cmd$none
+		};
 	});
 var _sch3lp$moobase_cmdr$Update$LaunchHub = {ctor: 'LaunchHub'};
-var _sch3lp$moobase_cmdr$View$newHub = {
-	color: _elm_lang$core$Color$blue,
-	pos: {ctor: '_Tuple2', _0: 0, _1: 0},
-	size: 25
-};
 var _sch3lp$moobase_cmdr$View$toForm = function (hub) {
+	var _p0 = hub.pos;
+	var x = _p0._0;
+	var y = _p0._1;
 	var shape = _evancz$elm_graphics$Collage$circle(hub.size);
-	return A2(_evancz$elm_graphics$Collage$filled, hub.color, shape);
+	var form = A2(_evancz$elm_graphics$Collage$filled, hub.color, shape);
+	return A2(
+		_evancz$elm_graphics$Collage$move,
+		{
+			ctor: '_Tuple2',
+			_0: _elm_lang$core$Basics$toFloat(x),
+			_1: _elm_lang$core$Basics$toFloat(y)
+		},
+		form);
 };
 var _sch3lp$moobase_cmdr$View$view = function (model) {
 	return A2(
@@ -10685,7 +10711,7 @@ var _sch3lp$moobase_cmdr$Main$main = _elm_lang$html$Html$program(
 			_0: {
 				hubs: {
 					ctor: '::',
-					_0: _sch3lp$moobase_cmdr$View$newHub,
+					_0: _sch3lp$moobase_cmdr$Model$newHub,
 					_1: {ctor: '[]'}
 				}
 			},
