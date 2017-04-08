@@ -1,0 +1,13 @@
+language: node_js
+node_js:
+  - "6"
+before_script:
+  - cat /proc/cpuinfo
+  - npm install -g elm
+  - elm-package install -y
+script: 
+  - elm-make src/Main.elm --yes
+  - sh buildscripts/deploy.sh
+
+
+
