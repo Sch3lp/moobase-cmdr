@@ -2,6 +2,8 @@ module View exposing(..)
 
 import Html exposing (..)
 import Html.Events exposing (onClick)
+import Svg exposing (..)
+import Svg.Attributes exposing (..)
 import Color exposing (Color)
 
 
@@ -20,14 +22,14 @@ posToFloat (x, y) =  (toFloat x, toFloat y)
 hub2Form: Hub -> Form
 hub2Form hub =
     let
-        shape = circle hub.size
+        shape = Collage.circle hub.size
         form = filled Color.blue shape
     in move (posToFloat hub.pos) form
 
 cord2Form: Cord -> Form
 cord2Form cord =
     let
-        p = path [posToFloat cord.from.pos, posToFloat cord.to.pos]
+        p = Collage.path [posToFloat cord.from.pos, posToFloat cord.to.pos]
     in traced defaultLine p
 
 view : Model -> Html.Html Msg
