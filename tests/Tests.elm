@@ -7,7 +7,11 @@ import String
 
 
 all : Test
-all =
+all = exampleTests
+
+
+exampleTests : Test
+exampleTests =
     describe "Sample Test Suite"
         [ describe "Unit test examples"
             [ test "Addition" <|
@@ -16,9 +20,6 @@ all =
             , test "String.left" <|
                 \() ->
                     Expect.equal "a" (String.left 1 "abcdefg")
-            , test "This test should fail - you should remove it" <|
-                \() ->
-                    Expect.fail "Failed as expected!"
             ]
         , describe "Fuzz test examples, using randomly generated input"
             [ fuzz (list int) "Lists always have positive length" <|
