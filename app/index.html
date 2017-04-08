@@ -10707,29 +10707,48 @@ var _sch3lp$moobase_cmdr$Model$appendChildToHub = F2(
 var _sch3lp$moobase_cmdr$Update$update = F2(
 	function (msg, model) {
 		var _p0 = msg;
-		if (_p0.ctor === 'LaunchHub') {
-			var oldRootHub = model.rootHub;
-			var newHub = _sch3lp$moobase_cmdr$Model$newHubAt(
-				A3(_sch3lp$moobase_cmdr$Model$launch, _sch3lp$moobase_cmdr$Model$initialHub, model.direction, model.force));
-			var newRootHub = A2(_sch3lp$moobase_cmdr$Model$appendChildToHub, oldRootHub, newHub);
-			return {
-				ctor: '_Tuple2',
-				_0: _elm_lang$core$Native_Utils.update(
-					model,
-					{rootHub: newRootHub}),
-				_1: _elm_lang$core$Platform_Cmd$none
-			};
-		} else {
-			var newDirection = model.direction + 90;
-			return {
-				ctor: '_Tuple2',
-				_0: _elm_lang$core$Native_Utils.update(
-					model,
-					{direction: newDirection}),
-				_1: _elm_lang$core$Platform_Cmd$none
-			};
+		switch (_p0.ctor) {
+			case 'LaunchHub':
+				var oldRootHub = model.rootHub;
+				var newHub = _sch3lp$moobase_cmdr$Model$newHubAt(
+					A3(_sch3lp$moobase_cmdr$Model$launch, _sch3lp$moobase_cmdr$Model$initialHub, model.direction, model.force));
+				var newRootHub = A2(_sch3lp$moobase_cmdr$Model$appendChildToHub, oldRootHub, newHub);
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{rootHub: newRootHub}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'AimRight':
+				var newDirection = model.direction + 90;
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{direction: newDirection}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'IncrementForce':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{force: model.force + 1}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			default:
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{force: model.force - 1}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
 		}
 	});
+var _sch3lp$moobase_cmdr$Update$DecrementForce = {ctor: 'DecrementForce'};
+var _sch3lp$moobase_cmdr$Update$IncrementForce = {ctor: 'IncrementForce'};
 var _sch3lp$moobase_cmdr$Update$AimRight = {ctor: 'AimRight'};
 var _sch3lp$moobase_cmdr$Update$LaunchHub = {ctor: 'LaunchHub'};
 var _sch3lp$moobase_cmdr$View$toForm = function (hub) {
@@ -10781,20 +10800,62 @@ var _sch3lp$moobase_cmdr$View$view = function (model) {
 					}),
 				_1: {
 					ctor: '::',
-					_0: _evancz$elm_graphics$Element$toHtml(
-						A3(
-							_evancz$elm_graphics$Collage$collage,
-							400,
-							400,
-							A2(
-								_elm_lang$core$List$map,
-								_sch3lp$moobase_cmdr$View$toForm,
+					_0: A2(
+						_elm_lang$html$Html$button,
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html_Events$onClick(_sch3lp$moobase_cmdr$Update$DecrementForce),
+							_1: {ctor: '[]'}
+						},
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html$text('-'),
+							_1: {ctor: '[]'}
+						}),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$span,
+							{ctor: '[]'},
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html$text(
+									_elm_lang$core$Basics$toString(model.force)),
+								_1: {ctor: '[]'}
+							}),
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$button,
 								{
 									ctor: '::',
-									_0: model.rootHub,
-									_1: _sch3lp$moobase_cmdr$Model$findAllChildrenRecursive(model.rootHub)
-								}))),
-					_1: {ctor: '[]'}
+									_0: _elm_lang$html$Html_Events$onClick(_sch3lp$moobase_cmdr$Update$IncrementForce),
+									_1: {ctor: '[]'}
+								},
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html$text('+'),
+									_1: {ctor: '[]'}
+								}),
+							_1: {
+								ctor: '::',
+								_0: _evancz$elm_graphics$Element$toHtml(
+									A3(
+										_evancz$elm_graphics$Collage$collage,
+										400,
+										400,
+										A2(
+											_elm_lang$core$List$map,
+											_sch3lp$moobase_cmdr$View$toForm,
+											{
+												ctor: '::',
+												_0: model.rootHub,
+												_1: _sch3lp$moobase_cmdr$Model$findAllChildrenRecursive(model.rootHub)
+											}))),
+								_1: {ctor: '[]'}
+							}
+						}
+					}
 				}
 			}
 		});
