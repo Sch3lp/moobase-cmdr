@@ -27,6 +27,7 @@ view model =
     div []
         [ button [onClick LaunchHub] [text "Launch"]
         , button [onClick AimRight] [text "Aim right"]
+        , span [] [ text "Force: " ]
         , button [ onClick DecrementForce ] [ text "-" ]
         , span [] [ text (toString model.force) ]
         , button [ onClick IncrementForce ] [ text "+" ]
