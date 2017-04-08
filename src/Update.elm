@@ -7,7 +7,10 @@ import Model exposing (..)
 type Msg = LaunchHub
 
 update: Msg -> Model -> (Model, Cmd Msg)
-update msg hubs =
+update msg model =
     case msg of
         LaunchHub ->
-            (hubs, Cmd.none)
+            let
+                newHubs = (newHubAt (100, 100)) :: model.hubs
+            in
+                ({model | hubs = newHubs}, Cmd.none)

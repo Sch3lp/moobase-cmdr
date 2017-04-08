@@ -5,7 +5,7 @@ import Html.Events exposing (onClick)
 import Color exposing (Color)
 
 import Element exposing (Element, toHtml)
-import Collage exposing (collage, circle, Form, filled)
+import Collage exposing (collage, circle, Form, filled, move)
 
 import Model exposing (..)
 
@@ -15,15 +15,11 @@ import Update exposing (..)
 
 toForm: Hub -> Form
 toForm hub = 
-    let shape = circle hub.size
-    in filled hub.color shape
-
-newHub: Hub
-newHub = 
-    { color = Color.blue
-    , pos = (0,0)
-    , size = 25
-    }
+    let
+        shape = circle hub.size
+        form = filled hub.color shape
+        (x, y) = hub.pos
+    in move (toFloat x, toFloat y) form
 
 view : Model -> Html.Html Msg
 view model =
