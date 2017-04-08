@@ -10623,10 +10623,42 @@ var _evancz$elm_graphics$Collage$ngon = F2(
 				f,
 				A2(_elm_lang$core$List$range, 0, n - 1)));
 	});
+var _sch3lp$moobase_cmdr$Model$launch = F3(
+	function (hub, direction, force) {
+		var _p0 = {ctor: '_Tuple2', _0: direction, _1: hub.pos};
+		switch (_p0._0) {
+			case 0:
+				return {
+					ctor: '_Tuple2',
+					_0: _p0._1._0,
+					_1: _p0._1._1 + _elm_lang$core$Basics$round(force)
+				};
+			case 180:
+				return {
+					ctor: '_Tuple2',
+					_0: _p0._1._0,
+					_1: _p0._1._1 - _elm_lang$core$Basics$round(force)
+				};
+			case 90:
+				return {
+					ctor: '_Tuple2',
+					_0: _p0._1._0 + _elm_lang$core$Basics$round(force),
+					_1: _p0._1._1
+				};
+			case 270:
+				return {
+					ctor: '_Tuple2',
+					_0: _p0._1._0 - _elm_lang$core$Basics$round(force),
+					_1: _p0._1._1
+				};
+			default:
+				return {ctor: '_Tuple2', _0: 100, _1: 100};
+		}
+	});
 var _sch3lp$moobase_cmdr$Model$newHubAt = function (pos) {
 	return {color: _elm_lang$core$Color$red, pos: pos, size: 25};
 };
-var _sch3lp$moobase_cmdr$Model$newHub = {
+var _sch3lp$moobase_cmdr$Model$initialHub = {
 	color: _elm_lang$core$Color$blue,
 	pos: {ctor: '_Tuple2', _0: 0, _1: 0},
 	size: 25
@@ -10646,7 +10678,7 @@ var _sch3lp$moobase_cmdr$Update$update = F2(
 			var newHubs = {
 				ctor: '::',
 				_0: _sch3lp$moobase_cmdr$Model$newHubAt(
-					{ctor: '_Tuple2', _0: 100, _1: 100}),
+					A3(_sch3lp$moobase_cmdr$Model$launch, _sch3lp$moobase_cmdr$Model$initialHub, model.direction, model.force)),
 				_1: model.hubs
 			};
 			return {
@@ -10735,11 +10767,11 @@ var _sch3lp$moobase_cmdr$Subscription$subscriptions = function (model) {
 var _sch3lp$moobase_cmdr$Main$initialModel = {
 	hubs: {
 		ctor: '::',
-		_0: _sch3lp$moobase_cmdr$Model$newHub,
+		_0: _sch3lp$moobase_cmdr$Model$initialHub,
 		_1: {ctor: '[]'}
 	},
 	direction: 0,
-	force: 0
+	force: 50
 };
 var _sch3lp$moobase_cmdr$Main$main = _elm_lang$html$Html$program(
 	{
