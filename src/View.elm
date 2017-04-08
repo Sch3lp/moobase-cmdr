@@ -2,7 +2,6 @@ module View exposing(..)
 
 import Html exposing (..)
 import Html.Events exposing (onClick)
-import Color exposing (Color)
 
 import Element exposing (Element, toHtml)
 import Collage exposing (collage, circle, Form, filled, move)
