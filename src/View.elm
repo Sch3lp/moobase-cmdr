@@ -29,8 +29,15 @@ hub2Form hub =
 
 hub2Circle: Hub -> Svg.Svg msg
 hub2Circle hub = 
-    Svg.circle [cx (toString (Tuple.first hub.pos)), cy (toString  (Tuple.second hub.pos)), r "40", stroke "blue", strokeWidth "3", fill "red"][]
-      
+    Svg.circle 
+        [ cx <| toString (Tuple.first  hub.pos)
+        , cy <| toString (Tuple.second hub.pos)
+        , r  <| toString hub.size
+        , stroke "red"
+        , strokeWidth "3"
+        , fill "blue"
+        ] []
+
 
 cord2Form: Cord -> Form
 cord2Form cord =
@@ -41,16 +48,22 @@ cord2Form cord =
 view : Model -> Html.Html Msg
 view model =
     div [Html.Attributes.style [("height", "100%"), ("width", "100%")]]
-        [div []
-        [ button [onClick LaunchHub] [Html.text "Launch"]
-        , button [onClick AimLeft] [Html.text "Aim left"]
-        , button [onClick AimRight] [Html.text "Aim right"]
-        , span [] [ Html.text "Force: " ]
-        , button [ onClick DecrementForce ] [ Html.text "-" ]
-        , span [] [ Html.text (toString model.force) ]
-        , button [ onClick IncrementForce ] [ Html.text "+" ]
+        [ div []
+            [ button [onClick LaunchHub] [Html.text "Launch"]
+            , button [onClick AimLeft]   [Html.text "Aim left"]
+            , button [onClick AimRight]  [Html.text "Aim right"]
+            , span [] [ Html.text "Force: " ]
+            , button [ onClick DecrementForce ] [ Html.text "-" ]
+            , span [] [ Html.text (toString model.force) ]
+            , button [ onClick IncrementForce ] [ Html.text "+" ]
+            ]
+        , svg 
+            [ Svg.Attributes.width  "400"
+            , Svg.Attributes.height "400"
+            , version "1.1"
+            , viewBox "-200 -200 400 400"
+            ] <| createAllCircles model
         ]
-        , svg [Html.Attributes.style [("height", "100%"), ("width", "100%")]] (createAllCircles model)]
 
 createAllForms : Model -> List Form
 createAllForms model =

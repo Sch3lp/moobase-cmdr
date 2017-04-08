@@ -29,17 +29,20 @@ newCord from to =
     , to = to
     }
 
+hubSize: Float
+hubSize = 25
+
 initialHub: Hub
 initialHub =
-    { pos = (100,100)
-    , size = 25
+    { pos = (0,0)
+    , size = hubSize
     , children = ChildHubs []
     }
 
 newHubAt: Position -> Hub
 newHubAt pos =
     { pos = pos
-    , size = 25
+    , size = hubSize
     , children = ChildHubs []
     }
 
