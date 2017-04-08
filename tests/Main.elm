@@ -1,13 +1,15 @@
 port module Main exposing (..)
 
 import Tests
+import ModelTests
+import Test exposing(concat)
 import Test.Runner.Node exposing (run, TestProgram)
 import Json.Encode exposing (Value)
 
 
 main : TestProgram
 main =
-    run emit Tests.all
-
+    run emit 
+        <| Test.concat [ Tests.all, ModelTests.all ]
 
 port emit : ( String, Value ) -> Cmd msg
