@@ -2,8 +2,11 @@ module Model exposing(..)
 
 import Color exposing (Color)
 
+type alias Angle = Float
+
 type alias Model =
     { hubs: List Hub
+    , direction: Angle
     }
 
 type alias Hub = 

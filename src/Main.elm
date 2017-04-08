@@ -7,10 +7,13 @@ import Update exposing (..)
 import View exposing (..)
 import Subscription exposing (subscriptions)
 
-main : Program Never Model Msg
+initialModel: Model
+initialModel = {hubs=[newHub], direction=0}
+
+main : Program Never Model Msg 
 main =
   Html.program
-  { init = ({hubs=[newHub]}, Cmd.none)
+  { init = (initialModel, Cmd.none)
   , update = update
   , view = view
   , subscriptions = subscriptions }
