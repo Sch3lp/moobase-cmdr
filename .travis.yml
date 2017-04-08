@@ -4,9 +4,12 @@ node_js:
 before_script:
   - cat /proc/cpuinfo
   - npm install -g elm
+  - npm install -g elm-test
   - elm-package install -y
+  - pushd tests && elm-package install -y && popd
 script: 
   - elm-make src/Main.elm --yes
+  - elm-test
   - sh buildscripts/deploy.sh
 
 
