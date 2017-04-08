@@ -33,6 +33,6 @@ update msg model =
             in
                 ({model | direction = newDirection}, Cmd.none)
         IncrementForce ->
-            ({model | force = model.force + 1}, Cmd.none)  
+            ({model | force = model.force + 15}, Cmd.none)  
         DecrementForce ->
-            ({model | force = model.force - 1}, Cmd.none)  
+            ({model | force = model.force - 15}, Cmd.none)  
