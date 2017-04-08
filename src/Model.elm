@@ -1,7 +1,5 @@
 module Model exposing(..)
 
-import Color exposing (Color)
-
 type alias Angle = Float
 type alias Force = Float
 
@@ -12,9 +10,7 @@ type alias Model =
     }
 
 type alias Hub =
-    {
-     color : Color
-    , pos : (Int, Int)
+    { pos : (Int, Int)
     , size : Float
     , children : ChildHubs
     }
@@ -23,16 +19,14 @@ type ChildHubs = ChildHubs (List Hub)
 
 initialHub: Hub
 initialHub =
-    { color = Color.blue
-    , pos = (0,0)
+    { pos = (0,0)
     , size = 25
     , children = ChildHubs []
     }
 
 newHubAt: (Int, Int) -> Hub
 newHubAt pos =
-    { color = Color.red
-    , pos = pos
+    { pos = pos
     , size = 25
     , children = ChildHubs []
     }

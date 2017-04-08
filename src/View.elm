@@ -2,6 +2,8 @@ module View exposing(..)
 
 import Html exposing (..)
 import Html.Events exposing (onClick)
+import Color exposing (Color)
+
 
 import Element exposing (Element, toHtml)
 import Collage exposing (collage, circle, Form, filled, move)
@@ -16,7 +18,7 @@ toForm: Hub -> Form
 toForm hub = 
     let
         shape = circle hub.size
-        form = filled hub.color shape
+        form = filled Color.blue shape
         (x, y) = hub.pos
     in move (toFloat x, toFloat y) form
 
