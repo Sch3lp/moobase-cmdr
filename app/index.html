@@ -8570,17 +8570,66 @@ var _elm_lang$svg$Svg_Attributes$additive = _elm_lang$virtual_dom$VirtualDom$att
 var _elm_lang$svg$Svg_Attributes$accumulate = _elm_lang$virtual_dom$VirtualDom$attribute('accumulate');
 var _elm_lang$svg$Svg_Attributes$accelerate = _elm_lang$virtual_dom$VirtualDom$attribute('accelerate');
 var _elm_lang$svg$Svg_Attributes$accentHeight = _elm_lang$virtual_dom$VirtualDom$attribute('accent-height');
-var _sch3lp$moobase_cmdr$Model$findAllImmediateChildren = function (hub) {
-	var _p0 = hub.children;
-	return _p0._0;
+var _sch3lp$moobase_cmdr$Model_Animation$fractionToAbsoluteInt = F3(
+	function (low, high, point) {
+		return _elm_lang$core$Basics$round(
+			_elm_lang$core$Basics$toFloat(high - low) * point) + low;
+	});
+var _sch3lp$moobase_cmdr$Model_Animation$fractionToAbsolutePos = F3(
+	function (_p1, _p0, point) {
+		var _p2 = _p1;
+		var _p3 = _p0;
+		return {
+			ctor: '_Tuple2',
+			_0: A3(_sch3lp$moobase_cmdr$Model_Animation$fractionToAbsoluteInt, _p2._0, _p3._0, point),
+			_1: A3(_sch3lp$moobase_cmdr$Model_Animation$fractionToAbsoluteInt, _p2._1, _p3._1, point)
+		};
+	});
+var _sch3lp$moobase_cmdr$Model_Animation$fractionToAbsolute = F3(
+	function (low, high, point) {
+		return (point * (high - low)) + low;
+	});
+var _sch3lp$moobase_cmdr$Model_Animation$absoluteToFraction = F3(
+	function (low, high, point) {
+		return (point - low) / (high - low);
+	});
+var _sch3lp$moobase_cmdr$Model_Animation$updateAnimation = F2(
+	function (newTimeStamp, animatingPosition) {
+		var fraction = A3(_sch3lp$moobase_cmdr$Model_Animation$absoluteToFraction, animatingPosition.animationStart, animatingPosition.animationEnd, newTimeStamp);
+		var newPosition = A3(_sch3lp$moobase_cmdr$Model_Animation$fractionToAbsolutePos, animatingPosition.from, animatingPosition.to, fraction);
+		return newPosition;
+	});
+var _sch3lp$moobase_cmdr$Model_Animation$AnimatingPosition = F4(
+	function (a, b, c, d) {
+		return {from: a, to: b, animationStart: c, animationEnd: d};
+	});
+var _sch3lp$moobase_cmdr$Model$extractHub = function (_p0) {
+	var _p1 = _p0;
+	return _p1._0;
 };
-var _sch3lp$moobase_cmdr$Model$findAllChildrenRecursive = function (hub) {
-	var children = _sch3lp$moobase_cmdr$Model$findAllImmediateChildren(hub);
-	return A2(
-		_elm_lang$core$Basics_ops['++'],
-		children,
-		A2(_elm_lang$core$List$concatMap, _sch3lp$moobase_cmdr$Model$findAllChildrenRecursive, children));
+var _sch3lp$moobase_cmdr$Model$findAllImmediateChildren = function (_p2) {
+	var _p3 = _p2;
+	return A2(_elm_lang$core$List$map, _sch3lp$moobase_cmdr$Model$extractHub, _p3._1);
 };
+var _sch3lp$moobase_cmdr$Model$foldOverTree = F3(
+	function (valueMapper, combiner, _p4) {
+		var _p5 = _p4;
+		return A3(
+			_elm_lang$core$List$foldr,
+			combiner,
+			valueMapper(_p5._0),
+			A2(
+				_elm_lang$core$List$map,
+				A2(_sch3lp$moobase_cmdr$Model$foldOverTree, valueMapper, combiner),
+				_p5._1));
+	});
+var _sch3lp$moobase_cmdr$Model$findAllHubsRecursive = A2(
+	_sch3lp$moobase_cmdr$Model$foldOverTree,
+	_elm_lang$core$List$singleton,
+	F2(
+		function (x, y) {
+			return A2(_elm_lang$core$Basics_ops['++'], x, y);
+		}));
 var _sch3lp$moobase_cmdr$Model$calculateLP = F4(
 	function (i, fn, direction, force) {
 		return A2(
@@ -8600,12 +8649,12 @@ var _sch3lp$moobase_cmdr$Model$calculateLP = F4(
 						_elm_lang$core$Basics$degrees(direction)))));
 	});
 var _sch3lp$moobase_cmdr$Model$calculateLandingPoint = F3(
-	function (_p1, direction, force) {
-		var _p2 = _p1;
+	function (_p6, direction, force) {
+		var _p7 = _p6;
 		return {
 			ctor: '_Tuple2',
-			_0: A4(_sch3lp$moobase_cmdr$Model$calculateLP, _p2._0, _elm_lang$core$Basics$sin, direction, force),
-			_1: A4(_sch3lp$moobase_cmdr$Model$calculateLP, _p2._1, _elm_lang$core$Basics$cos, direction + 180, force)
+			_0: A4(_sch3lp$moobase_cmdr$Model$calculateLP, _p7._0, _elm_lang$core$Basics$sin, direction, force),
+			_1: A4(_sch3lp$moobase_cmdr$Model$calculateLP, _p7._1, _elm_lang$core$Basics$cos, direction + 180, force)
 		};
 	});
 var _sch3lp$moobase_cmdr$Model$launch = F3(
@@ -8613,26 +8662,19 @@ var _sch3lp$moobase_cmdr$Model$launch = F3(
 		return A3(_sch3lp$moobase_cmdr$Model$calculateLandingPoint, hub.pos, direction, force);
 	});
 var _sch3lp$moobase_cmdr$Model$hubSize = 25;
+var _sch3lp$moobase_cmdr$Model$newHubAt = function (pos) {
+	return {pos: pos, size: _sch3lp$moobase_cmdr$Model$hubSize, animation: _elm_lang$core$Maybe$Nothing};
+};
 var _sch3lp$moobase_cmdr$Model$newCord = F2(
 	function (from, to) {
 		return {from: from, to: to};
 	});
-var _sch3lp$moobase_cmdr$Model$findAllImmediateChildCords = function (hub) {
+var _sch3lp$moobase_cmdr$Model$findAllImmediateChildCords = function (hubTree) {
+	var _p8 = hubTree;
 	return A2(
 		_elm_lang$core$List$map,
-		_sch3lp$moobase_cmdr$Model$newCord(hub),
-		_sch3lp$moobase_cmdr$Model$findAllImmediateChildren(hub));
-};
-var _sch3lp$moobase_cmdr$Model$findAllChildCordsRecursive = function (hub) {
-	var cords = _sch3lp$moobase_cmdr$Model$findAllImmediateChildCords(hub);
-	var children = _sch3lp$moobase_cmdr$Model$findAllImmediateChildren(hub);
-	return A2(
-		_elm_lang$core$Basics_ops['++'],
-		cords,
-		A2(_elm_lang$core$List$concatMap, _sch3lp$moobase_cmdr$Model$findAllChildCordsRecursive, children));
-};
-var _sch3lp$moobase_cmdr$Model$findAllCords = function (model) {
-	return _sch3lp$moobase_cmdr$Model$findAllChildCordsRecursive(model.rootHub);
+		_sch3lp$moobase_cmdr$Model$newCord(_p8._0),
+		_sch3lp$moobase_cmdr$Model$findAllImmediateChildren(hubTree));
 };
 var _sch3lp$moobase_cmdr$Model$Model = F3(
 	function (a, b, c) {
@@ -8640,41 +8682,50 @@ var _sch3lp$moobase_cmdr$Model$Model = F3(
 	});
 var _sch3lp$moobase_cmdr$Model$Hub = F3(
 	function (a, b, c) {
-		return {pos: a, size: b, children: c};
+		return {pos: a, size: b, animation: c};
 	});
 var _sch3lp$moobase_cmdr$Model$Cord = F2(
 	function (a, b) {
 		return {from: a, to: b};
 	});
-var _sch3lp$moobase_cmdr$Model$ChildHubs = function (a) {
-	return {ctor: 'ChildHubs', _0: a};
-};
-var _sch3lp$moobase_cmdr$Model$initialHub = {
-	pos: {ctor: '_Tuple2', _0: 0, _1: 0},
-	size: _sch3lp$moobase_cmdr$Model$hubSize,
-	children: _sch3lp$moobase_cmdr$Model$ChildHubs(
-		{ctor: '[]'})
-};
-var _sch3lp$moobase_cmdr$Model$newHubAt = function (pos) {
-	return {
-		pos: pos,
-		size: _sch3lp$moobase_cmdr$Model$hubSize,
-		children: _sch3lp$moobase_cmdr$Model$ChildHubs(
-			{ctor: '[]'})
-	};
-};
-var _sch3lp$moobase_cmdr$Model$appendChildWithUnwrap = F2(
-	function (_p3, child) {
-		var _p4 = _p3;
-		return _sch3lp$moobase_cmdr$Model$ChildHubs(
-			{ctor: '::', _0: child, _1: _p4._0});
+var _sch3lp$moobase_cmdr$Model$TreeNode = F2(
+	function (a, b) {
+		return {ctor: 'TreeNode', _0: a, _1: b};
 	});
+var _sch3lp$moobase_cmdr$Model$initialHub = A2(
+	_sch3lp$moobase_cmdr$Model$TreeNode,
+	_sch3lp$moobase_cmdr$Model$newHubAt(
+		{ctor: '_Tuple2', _0: 0, _1: 0}),
+	{ctor: '[]'});
+var _sch3lp$moobase_cmdr$Model$findAllChildCordsRecursive = function (_p9) {
+	var _p10 = _p9;
+	var _p11 = _p10._1;
+	var cords = _sch3lp$moobase_cmdr$Model$findAllImmediateChildCords(
+		A2(_sch3lp$moobase_cmdr$Model$TreeNode, _p10._0, _p11));
+	return A2(
+		_elm_lang$core$Basics_ops['++'],
+		cords,
+		A2(_elm_lang$core$List$concatMap, _sch3lp$moobase_cmdr$Model$findAllChildCordsRecursive, _p11));
+};
+var _sch3lp$moobase_cmdr$Model$findAllCords = function (model) {
+	return _sch3lp$moobase_cmdr$Model$findAllChildCordsRecursive(model.rootHub);
+};
 var _sch3lp$moobase_cmdr$Model$appendChildToHub = F2(
 	function (parent, child) {
-		var newChildren = A2(_sch3lp$moobase_cmdr$Model$appendChildWithUnwrap, parent.children, child);
-		return _elm_lang$core$Native_Utils.update(
-			parent,
-			{children: newChildren});
+		var _p12 = parent;
+		var hub = _p12._0;
+		var existingChildren = _p12._1;
+		return A2(
+			_sch3lp$moobase_cmdr$Model$TreeNode,
+			hub,
+			{
+				ctor: '::',
+				_0: A2(
+					_sch3lp$moobase_cmdr$Model$TreeNode,
+					child,
+					{ctor: '[]'}),
+				_1: existingChildren
+			});
 	});
 var _sch3lp$moobase_cmdr$Update$update = F2(
 	function (msg, model) {
@@ -8683,7 +8734,11 @@ var _sch3lp$moobase_cmdr$Update$update = F2(
 			case 'LaunchHub':
 				var oldRootHub = model.rootHub;
 				var newHub = _sch3lp$moobase_cmdr$Model$newHubAt(
-					A3(_sch3lp$moobase_cmdr$Model$launch, _sch3lp$moobase_cmdr$Model$initialHub, model.direction, model.force));
+					A3(
+						_sch3lp$moobase_cmdr$Model$launch,
+						_sch3lp$moobase_cmdr$Model$extractHub(oldRootHub),
+						model.direction,
+						model.force));
 				var newRootHub = A2(_sch3lp$moobase_cmdr$Model$appendChildToHub, oldRootHub, newHub);
 				return {
 					ctor: '_Tuple2',
@@ -8718,7 +8773,7 @@ var _sch3lp$moobase_cmdr$Update$update = F2(
 						{force: model.force + 15}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
-			default:
+			case 'DecrementForce':
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
@@ -8726,8 +8781,13 @@ var _sch3lp$moobase_cmdr$Update$update = F2(
 						{force: model.force - 15}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
+			default:
+				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
 		}
 	});
+var _sch3lp$moobase_cmdr$Update$Tick = function (a) {
+	return {ctor: 'Tick', _0: a};
+};
 var _sch3lp$moobase_cmdr$Update$DecrementForce = {ctor: 'DecrementForce'};
 var _sch3lp$moobase_cmdr$Update$IncrementForce = {ctor: 'IncrementForce'};
 var _sch3lp$moobase_cmdr$Update$AimLeft = {ctor: 'AimLeft'};
@@ -8812,11 +8872,7 @@ var _sch3lp$moobase_cmdr$View$hub2Circle = function (hub) {
 };
 var _sch3lp$moobase_cmdr$View$createAllCircles = function (model) {
 	var allCords = _sch3lp$moobase_cmdr$Model$findAllCords(model);
-	var allHubs = {
-		ctor: '::',
-		_0: model.rootHub,
-		_1: _sch3lp$moobase_cmdr$Model$findAllChildrenRecursive(model.rootHub)
-	};
+	var allHubs = _sch3lp$moobase_cmdr$Model$findAllHubsRecursive(model.rootHub);
 	return A2(
 		_elm_lang$core$Basics_ops['++'],
 		A2(_elm_lang$core$List$map, _sch3lp$moobase_cmdr$View$hub2Circle, allHubs),
