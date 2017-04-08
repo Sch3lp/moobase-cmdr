@@ -11695,18 +11695,6 @@ var _sch3lp$moobase_cmdr$View$cord2Form = function (cord) {
 		});
 	return A2(_evancz$elm_graphics$Collage$traced, _evancz$elm_graphics$Collage$defaultLine, p);
 };
-var _sch3lp$moobase_cmdr$View$createAllForms = function (model) {
-	var allCords = _sch3lp$moobase_cmdr$Model$findAllCords(model);
-	var allHubs = {
-		ctor: '::',
-		_0: model.rootHub,
-		_1: _sch3lp$moobase_cmdr$Model$findAllChildrenRecursive(model.rootHub)
-	};
-	return A2(
-		_elm_lang$core$Basics_ops['++'],
-		A2(_elm_lang$core$List$map, _sch3lp$moobase_cmdr$View$hub2Form, allHubs),
-		A2(_elm_lang$core$List$map, _sch3lp$moobase_cmdr$View$cord2Form, allCords));
-};
 var _sch3lp$moobase_cmdr$Subscription$subscriptions = function (model) {
 	return _elm_lang$core$Platform_Sub$none;
 };
