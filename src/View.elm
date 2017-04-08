@@ -25,8 +25,7 @@ view model =
     div []
         [ button [onClick LaunchHub] [text "Launch"]
         , button [onClick AimRight] [text "Aim right"]
-        , List.map toForm model.hubs
+        , List.map toForm (model.rootHub :: findAllChildrenRecursive model.rootHub)
             |> collage 400 400
             |> toHtml
         ]
-

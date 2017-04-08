@@ -9,14 +9,16 @@ type Msg = LaunchHub | AimRight
 update: Msg -> Model -> (Model, Cmd Msg)
 update msg model =
     case msg of
+        -- TODO vincenve need to add the hub we're launching from, for now always root hub
         LaunchHub ->
             let
-                newHubs = (newHubAt <| launch initialHub model.direction model.force) :: model.hubs
+                newHub = (newHubAt <| launch initialHub model.direction model.force)
+                oldRootHub = model.rootHub
+                newRootHub = appendChildToHub oldRootHub newHub
             in
-                ({model | hubs = newHubs}, Cmd.none)
+                ({model | rootHub = newRootHub}, Cmd.none)
         AimRight ->
-            let 
+            let
                 newDirection = model.direction + 90
             in
                 ({model | direction = newDirection}, Cmd.none)
-
