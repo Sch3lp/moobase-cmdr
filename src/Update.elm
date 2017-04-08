@@ -1,6 +1,8 @@
 module Update exposing(..)
 
 import Model exposing (..)
+import Model.Time exposing (TimeDelta)
+
 
 {- do general update stuff here -}
 
@@ -10,6 +12,7 @@ type Msg
     | AimLeft
     | IncrementForce
     | DecrementForce
+    | Tick TimeDelta
 
 update: Msg -> Model -> (Model, Cmd Msg)
 update msg model =
@@ -17,8 +20,8 @@ update msg model =
         -- TODO vincenve need to add the hub we're launching from, for now always root hub
         LaunchHub ->
             let
-                newHub = (newHubAt <| launch initialHub model.direction model.force)
                 oldRootHub = model.rootHub
+                newHub = (newHubAt <| launch (extractHub oldRootHub) model.direction model.force)
                 newRootHub = appendChildToHub oldRootHub newHub
             in
                 ({model | rootHub = newRootHub}, Cmd.none)
@@ -33,6 +36,9 @@ update msg model =
             in
                 ({model | direction = newDirection}, Cmd.none)
         IncrementForce ->
-            ({model | force = model.force + 15}, Cmd.none)  
+            ({model | force = model.force + 15}, Cmd.none)
         DecrementForce ->
-            ({model | force = model.force - 15}, Cmd.none)  
+            ({model | force = model.force - 15}, Cmd.none)
+        Tick delta ->
+            (model, Cmd.none)
+

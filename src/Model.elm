@@ -8,7 +8,7 @@ type alias Angle = Float
 type alias Force = Float
 
 type alias Model =
-    { rootHub: Hub
+    { rootHub: HubTree
     , direction: Angle
     , force: Force
     }
@@ -16,11 +16,11 @@ type alias Model =
 type alias Hub =
     { pos : Position
     , size : Float
-    , children : ChildHubs
     , animation : Maybe AnimatingPosition
     }
 
-type ChildHubs = ChildHubs (List Hub)
+type Tree a = TreeNode a (List (Tree a))
+type alias HubTree = Tree Hub
 
 type alias Cord =
     { from: Hub
@@ -36,14 +36,13 @@ newCord from to =
 hubSize: Float
 hubSize = 25
 
-initialHub: Hub
-initialHub = newHubAt (0,0)
+initialHub: HubTree
+initialHub = TreeNode (newHubAt (0,0)) []
 
 newHubAt: Position -> Hub
 newHubAt pos =
     { pos = pos
     , size = hubSize
-    , children = ChildHubs []
     , animation = Nothing
     }
 
@@ -65,40 +64,40 @@ calculateLandingPoint (x,y) direction force =
 findAllCords : Model -> List Cord
 findAllCords model = findAllChildCordsRecursive model.rootHub
 
-findAllChildCordsRecursive : Hub -> List Cord
-findAllChildCordsRecursive hub =
+findAllChildCordsRecursive : HubTree -> List Cord
+findAllChildCordsRecursive (TreeNode hub children) =
     let
-        children = findAllImmediateChildren hub
-        cords = findAllImmediateChildCords hub
+        cords = findAllImmediateChildCords (TreeNode hub children)
     in
         cords ++ List.concatMap findAllChildCordsRecursive children
 
-findAllImmediateChildCords : Hub -> List Cord
-findAllImmediateChildCords hub =
-    findAllImmediateChildren hub
-    |> List.map (newCord hub)
+findAllImmediateChildCords : HubTree -> List Cord
+findAllImmediateChildCords hubTree =
+    case hubTree of
+        TreeNode hub children -> findAllImmediateChildren hubTree |> List.map (newCord hub)
 
-
-findAllChildrenRecursive : Hub -> List Hub
-findAllChildrenRecursive hub =
+foldOverTree : (a -> b) -> (List b -> b) -> Tree a -> b
+foldOverTree valueMapper combiner (TreeNode a children) =
     let
-        children = findAllImmediateChildren hub
+        value = valueMapper a
+        b = List.map (foldOverTree valueMapper combiner) children
+        combined = combiner b
     in
-        children ++ List.concatMap findAllChildrenRecursive children
+        combined
 
-findAllImmediateChildren : Hub -> List Hub
-findAllImmediateChildren hub =
-    case hub.children of
-        ChildHubs (children) -> children
+findAllHubsRecursive : HubTree -> List Hub
+findAllHubsRecursive (TreeNode hub children) =
+    hub :: List.concatMap findAllHubsRecursive children
 
-appendChildToHub: Hub -> Hub -> Hub
+findAllImmediateChildren : HubTree -> List Hub
+findAllImmediateChildren (TreeNode _ children) = List.map extractHub children
+
+extractHub : HubTree -> Hub
+extractHub (TreeNode hub _) = hub
+
+appendChildToHub: HubTree -> Hub -> HubTree
 appendChildToHub parent child =
     let
-        newChildren = appendChildWithUnwrap parent.children child
+        (TreeNode hub existingChildren) = parent
     in
-        {parent | children = newChildren}
-
--- I don't know how to do this inline, so I'll add another function!
-appendChildWithUnwrap: ChildHubs -> Hub -> ChildHubs
-appendChildWithUnwrap (ChildHubs existingChildren) child =
-    ChildHubs (child :: existingChildren)
+        (TreeNode hub ((TreeNode child []):: existingChildren))
