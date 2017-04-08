@@ -8,9 +8,9 @@ import View exposing (..)
 import Subscription exposing (subscriptions)
 
 initialModel: Model
-initialModel = { hubs=[newHub]
-               , direction=0
-               , force=0
+initialModel = { hubs = [newHub]
+               , direction = 0
+               , force = 50
                }
 
 main : Program Never Model Msg 
