@@ -10634,29 +10634,31 @@ var _sch3lp$moobase_cmdr$Model$findAllChildrenRecursive = function (hub) {
 		children,
 		A2(_elm_lang$core$List$concatMap, _sch3lp$moobase_cmdr$Model$findAllChildrenRecursive, children));
 };
+var _sch3lp$moobase_cmdr$Model$calculateLP = F4(
+	function (i, fn, direction, force) {
+		return A2(
+			F2(
+				function (x, y) {
+					return x + y;
+				}),
+			i,
+			_elm_lang$core$Basics$round(
+				A2(
+					F2(
+						function (x, y) {
+							return x * y;
+						}),
+					force,
+					fn(
+						_elm_lang$core$Basics$degrees(direction)))));
+	});
 var _sch3lp$moobase_cmdr$Model$calculateLandingPoint = F3(
 	function (_p1, direction, force) {
 		var _p2 = _p1;
 		return {
 			ctor: '_Tuple2',
-			_0: _p2._0 + _elm_lang$core$Basics$round(
-				A2(
-					F2(
-						function (x, y) {
-							return x * y;
-						}),
-					force,
-					_elm_lang$core$Basics$sin(
-						_elm_lang$core$Basics$degrees(direction)))),
-			_1: _p2._1 + _elm_lang$core$Basics$round(
-				A2(
-					F2(
-						function (x, y) {
-							return x * y;
-						}),
-					force,
-					_elm_lang$core$Basics$cos(
-						_elm_lang$core$Basics$degrees(direction))))
+			_0: A4(_sch3lp$moobase_cmdr$Model$calculateLP, _p2._0, _elm_lang$core$Basics$sin, direction, force),
+			_1: A4(_sch3lp$moobase_cmdr$Model$calculateLP, _p2._1, _elm_lang$core$Basics$cos, direction, force)
 		};
 	});
 var _sch3lp$moobase_cmdr$Model$launch = F3(
