@@ -10623,69 +10623,102 @@ var _evancz$elm_graphics$Collage$ngon = F2(
 				f,
 				A2(_elm_lang$core$List$range, 0, n - 1)));
 	});
+var _sch3lp$moobase_cmdr$Model$findAllImmediateChildren = function (hub) {
+	var _p0 = hub.children;
+	return _p0._0;
+};
+var _sch3lp$moobase_cmdr$Model$findAllChildrenRecursive = function (hub) {
+	var children = _sch3lp$moobase_cmdr$Model$findAllImmediateChildren(hub);
+	return A2(
+		_elm_lang$core$Basics_ops['++'],
+		children,
+		A2(_elm_lang$core$List$concatMap, _sch3lp$moobase_cmdr$Model$findAllChildrenRecursive, children));
+};
 var _sch3lp$moobase_cmdr$Model$launch = F3(
 	function (hub, direction, force) {
-		var _p0 = {ctor: '_Tuple2', _0: direction, _1: hub.pos};
-		switch (_p0._0) {
+		var _p1 = {ctor: '_Tuple2', _0: direction, _1: hub.pos};
+		switch (_p1._0) {
 			case 0:
 				return {
 					ctor: '_Tuple2',
-					_0: _p0._1._0,
-					_1: _p0._1._1 + _elm_lang$core$Basics$round(force)
+					_0: _p1._1._0,
+					_1: _p1._1._1 + _elm_lang$core$Basics$round(force)
 				};
 			case 180:
 				return {
 					ctor: '_Tuple2',
-					_0: _p0._1._0,
-					_1: _p0._1._1 - _elm_lang$core$Basics$round(force)
+					_0: _p1._1._0,
+					_1: _p1._1._1 - _elm_lang$core$Basics$round(force)
 				};
 			case 90:
 				return {
 					ctor: '_Tuple2',
-					_0: _p0._1._0 + _elm_lang$core$Basics$round(force),
-					_1: _p0._1._1
+					_0: _p1._1._0 + _elm_lang$core$Basics$round(force),
+					_1: _p1._1._1
 				};
 			case 270:
 				return {
 					ctor: '_Tuple2',
-					_0: _p0._1._0 - _elm_lang$core$Basics$round(force),
-					_1: _p0._1._1
+					_0: _p1._1._0 - _elm_lang$core$Basics$round(force),
+					_1: _p1._1._1
 				};
 			default:
 				return {ctor: '_Tuple2', _0: 100, _1: 100};
 		}
 	});
-var _sch3lp$moobase_cmdr$Model$newHubAt = function (pos) {
-	return {color: _elm_lang$core$Color$red, pos: pos, size: 25};
+var _sch3lp$moobase_cmdr$Model$Model = F3(
+	function (a, b, c) {
+		return {rootHub: a, direction: b, force: c};
+	});
+var _sch3lp$moobase_cmdr$Model$Hub = F4(
+	function (a, b, c, d) {
+		return {color: a, pos: b, size: c, children: d};
+	});
+var _sch3lp$moobase_cmdr$Model$ChildHubs = function (a) {
+	return {ctor: 'ChildHubs', _0: a};
 };
 var _sch3lp$moobase_cmdr$Model$initialHub = {
 	color: _elm_lang$core$Color$blue,
 	pos: {ctor: '_Tuple2', _0: 0, _1: 0},
-	size: 25
+	size: 25,
+	children: _sch3lp$moobase_cmdr$Model$ChildHubs(
+		{ctor: '[]'})
 };
-var _sch3lp$moobase_cmdr$Model$Model = F3(
-	function (a, b, c) {
-		return {hubs: a, direction: b, force: c};
+var _sch3lp$moobase_cmdr$Model$newHubAt = function (pos) {
+	return {
+		color: _elm_lang$core$Color$red,
+		pos: pos,
+		size: 25,
+		children: _sch3lp$moobase_cmdr$Model$ChildHubs(
+			{ctor: '[]'})
+	};
+};
+var _sch3lp$moobase_cmdr$Model$appendChildWithUnwrap = F2(
+	function (_p2, child) {
+		var _p3 = _p2;
+		return _sch3lp$moobase_cmdr$Model$ChildHubs(
+			{ctor: '::', _0: child, _1: _p3._0});
 	});
-var _sch3lp$moobase_cmdr$Model$Hub = F3(
-	function (a, b, c) {
-		return {color: a, pos: b, size: c};
+var _sch3lp$moobase_cmdr$Model$appendChildToHub = F2(
+	function (parent, child) {
+		var newChildren = A2(_sch3lp$moobase_cmdr$Model$appendChildWithUnwrap, parent.children, child);
+		return _elm_lang$core$Native_Utils.update(
+			parent,
+			{children: newChildren});
 	});
 var _sch3lp$moobase_cmdr$Update$update = F2(
 	function (msg, model) {
 		var _p0 = msg;
 		if (_p0.ctor === 'LaunchHub') {
-			var newHubs = {
-				ctor: '::',
-				_0: _sch3lp$moobase_cmdr$Model$newHubAt(
-					A3(_sch3lp$moobase_cmdr$Model$launch, _sch3lp$moobase_cmdr$Model$initialHub, model.direction, model.force)),
-				_1: model.hubs
-			};
+			var oldRootHub = model.rootHub;
+			var newHub = _sch3lp$moobase_cmdr$Model$newHubAt(
+				A3(_sch3lp$moobase_cmdr$Model$launch, _sch3lp$moobase_cmdr$Model$initialHub, model.direction, model.force));
+			var newRootHub = A2(_sch3lp$moobase_cmdr$Model$appendChildToHub, oldRootHub, newHub);
 			return {
 				ctor: '_Tuple2',
 				_0: _elm_lang$core$Native_Utils.update(
 					model,
-					{hubs: newHubs}),
+					{rootHub: newRootHub}),
 				_1: _elm_lang$core$Platform_Cmd$none
 			};
 		} else {
@@ -10755,7 +10788,14 @@ var _sch3lp$moobase_cmdr$View$view = function (model) {
 							_evancz$elm_graphics$Collage$collage,
 							400,
 							400,
-							A2(_elm_lang$core$List$map, _sch3lp$moobase_cmdr$View$toForm, model.hubs))),
+							A2(
+								_elm_lang$core$List$map,
+								_sch3lp$moobase_cmdr$View$toForm,
+								{
+									ctor: '::',
+									_0: model.rootHub,
+									_1: _sch3lp$moobase_cmdr$Model$findAllChildrenRecursive(model.rootHub)
+								}))),
 					_1: {ctor: '[]'}
 				}
 			}
@@ -10764,15 +10804,7 @@ var _sch3lp$moobase_cmdr$View$view = function (model) {
 var _sch3lp$moobase_cmdr$Subscription$subscriptions = function (model) {
 	return _elm_lang$core$Platform_Sub$none;
 };
-var _sch3lp$moobase_cmdr$Main$initialModel = {
-	hubs: {
-		ctor: '::',
-		_0: _sch3lp$moobase_cmdr$Model$initialHub,
-		_1: {ctor: '[]'}
-	},
-	direction: 0,
-	force: 50
-};
+var _sch3lp$moobase_cmdr$Main$initialModel = {rootHub: _sch3lp$moobase_cmdr$Model$initialHub, direction: 0, force: 50};
 var _sch3lp$moobase_cmdr$Main$main = _elm_lang$html$Html$program(
 	{
 		init: {ctor: '_Tuple2', _0: _sch3lp$moobase_cmdr$Main$initialModel, _1: _elm_lang$core$Platform_Cmd$none},
