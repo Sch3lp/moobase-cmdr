@@ -6,8 +6,8 @@ import Model exposing (..)
 import Update exposing (..)
 
 {- stole this from elm-joust -}
-subscriptions : Hub -> Sub Msg
-subscriptions hub =
+subscriptions : Model -> Sub Msg
+subscriptions model =
   Sub.none
 -- subscriptions {ui} =
 --   let

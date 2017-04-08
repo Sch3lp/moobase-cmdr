@@ -25,10 +25,10 @@ newHub =
     , size = 25
     }
 
-view : Hub -> Html.Html Msg
-view hub = 
+view : Model -> Html.Html Msg
+view model =
     div []
         [ button [onClick LaunchHub] [text "Launch"]
-        , toHtml <| collage 400 400 [toForm hub]
+        , toHtml <| collage 400 400 (List.map toForm model.hubs)
         ]
 

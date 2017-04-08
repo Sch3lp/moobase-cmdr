@@ -6,6 +6,8 @@ import Model exposing (..)
 
 type Msg = LaunchHub
 
-update: Msg -> Hub -> (Hub, Cmd Msg)
-update msg hub =
-    (hub, Cmd.none)
+update: Msg -> Model -> (Model, Cmd Msg)
+update msg hubs =
+    case msg of
+        LaunchHub ->
+            (hubs, Cmd.none)
