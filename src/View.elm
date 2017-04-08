@@ -27,14 +27,17 @@ hub2Form hub =
         form = filled Color.blue shape
     in move (posToFloat hub.pos) form
 
+hubBorder: Float
+hubBorder = 3
+
 hub2Circle: Hub -> Svg.Svg msg
 hub2Circle hub = 
     Svg.circle 
         [ cx <| toString (Tuple.first  hub.pos)
         , cy <| toString (Tuple.second hub.pos)
-        , r  <| toString hub.size
+        , r  <| toString (hub.size - hubBorder)
         , stroke "red"
-        , strokeWidth "3"
+        , strokeWidth <| toString hubBorder
         , fill "blue"
         ] []
 

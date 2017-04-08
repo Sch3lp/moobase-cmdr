@@ -59,7 +59,7 @@ calculateLP i fn direction force =
 
 calculateLandingPoint: Position -> Angle -> Force -> Position
 calculateLandingPoint (x,y) direction force =
-        ( calculateLP x sin direction force, calculateLP y cos direction force)
+        ( calculateLP x sin direction force, calculateLP y cos (direction + 180) force) -- -180 because fuck you SVG
 
 findAllCords : Model -> List Cord
 findAllCords model = findAllChildCordsRecursive model.rootHub
