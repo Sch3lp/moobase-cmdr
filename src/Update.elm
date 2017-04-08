@@ -11,7 +11,7 @@ update msg model =
     case msg of
         LaunchHub ->
             let
-                newHubs = (newHubAt (100, 100)) :: model.hubs
+                newHubs = (newHubAt <| launch initialHub model.direction model.force) :: model.hubs
             in
                 ({model | hubs = newHubs}, Cmd.none)
         AimRight ->

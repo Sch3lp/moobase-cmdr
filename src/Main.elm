@@ -8,7 +8,7 @@ import View exposing (..)
 import Subscription exposing (subscriptions)
 
 initialModel: Model
-initialModel = { hubs = [newHub]
+initialModel = { hubs = [initialHub]
                , direction = 0
                , force = 50
                }
