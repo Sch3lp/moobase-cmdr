@@ -25,6 +25,8 @@ view : Model -> Html.Html Msg
 view model =
     div []
         [ button [onClick LaunchHub] [text "Launch"]
-        , toHtml <| collage 400 400 (List.map toForm model.hubs)
+        , List.map toForm model.hubs
+            |> collage 400 400
+            |> toHtml
         ]
 
