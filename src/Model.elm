@@ -2,6 +2,7 @@ module Model exposing(..)
 
 type alias Angle = Float
 type alias Force = Float
+type alias Position = (Int, Int)
 
 type alias Model =
     { rootHub: Hub
@@ -10,7 +11,7 @@ type alias Model =
     }
 
 type alias Hub =
-    { pos : (Int, Int)
+    { pos : Position
     , size : Float
     , children : ChildHubs
     }
@@ -35,17 +36,17 @@ initialHub =
     , children = ChildHubs []
     }
 
-newHubAt: (Int, Int) -> Hub
+newHubAt: Position -> Hub
 newHubAt pos =
     { pos = pos
     , size = 25
     , children = ChildHubs []
     }
 
-launch: Hub -> Angle -> Force -> (Int, Int)
+launch: Hub -> Angle -> Force -> Position
 launch hub direction force = calculateLandingPoint hub.pos direction force
 
-calculateLandingPoint: (Int, Int) -> Angle -> Force -> (Int, Int)
+calculateLandingPoint: Position -> Angle -> Force -> Position
 calculateLandingPoint (x,y) direction force =
         ( x + (round 
             <| (*) force
