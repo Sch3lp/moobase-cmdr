@@ -7,6 +7,11 @@ Now also on Travis!
 
 Check out the demo [here](https://sch3lp.github.io/moobase-cmdr/app)
 
+
+## Game rules
+[![Official original tutorial](http://img.youtube.com/vi/owKsWNySGmk/0.jpg)](https://www.youtube.com/watch?v=owKsWNySGmk)
+
+
 ## Get it working on your machine
 1. Clone this repository
 
