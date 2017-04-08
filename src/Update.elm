@@ -4,7 +4,12 @@ import Model exposing (..)
 
 {- do general update stuff here -}
 
-type Msg = LaunchHub | AimRight | IncrementForce | DecrementForce
+type Msg
+    = LaunchHub
+    | AimRight
+    | AimLeft
+    | IncrementForce
+    | DecrementForce
 
 update: Msg -> Model -> (Model, Cmd Msg)
 update msg model =
@@ -20,6 +25,11 @@ update msg model =
         AimRight ->
             let
                 newDirection = model.direction + 90
+            in
+                ({model | direction = newDirection}, Cmd.none)
+        AimLeft ->
+            let
+                newDirection = model.direction - 90
             in
                 ({model | direction = newDirection}, Cmd.none)
         IncrementForce ->

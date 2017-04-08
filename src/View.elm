@@ -34,6 +34,7 @@ view : Model -> Html.Html Msg
 view model =
     div []
         [ button [onClick LaunchHub] [Html.text "Launch"]
+        , button [onClick AimLeft] [Html.text "Aim left"]
         , button [onClick AimRight] [Html.text "Aim right"]
         , span [] [ Html.text "Force: " ]
         , button [ onClick DecrementForce ] [ Html.text "-" ]
