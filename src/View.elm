@@ -5,11 +5,7 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (onClick)
 import Svg exposing (..)
 import Svg.Attributes exposing (..)
-import Color exposing (Color)
 
-
-import Element exposing (Element, toHtml)
-import Collage exposing (..)
 
 import Model exposing (..)
 
@@ -19,13 +15,6 @@ import Update exposing (..)
 
 posToFloat: Position -> (Float, Float)
 posToFloat (x, y) =  (toFloat x, toFloat y)
-
-hub2Form: Hub -> Form
-hub2Form hub =
-    let
-        shape = Collage.circle hub.size
-        form = filled Color.blue shape
-    in move (posToFloat hub.pos) form
 
 hubBorder: Float
 hubBorder = 3
@@ -41,12 +30,13 @@ hub2Circle hub =
         , fill "blue"
         ] []
 
-
+{- TODO write to SVG
 cord2Form: Cord -> Form
 cord2Form cord =
     let
         p = Collage.path [posToFloat cord.from.pos, posToFloat cord.to.pos]
     in traced defaultLine p
+-}
 
 view : Model -> Html.Html Msg
 view model =
