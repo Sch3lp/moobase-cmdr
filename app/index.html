@@ -10670,15 +10670,14 @@ var _sch3lp$moobase_cmdr$Model$Model = F3(
 	function (a, b, c) {
 		return {rootHub: a, direction: b, force: c};
 	});
-var _sch3lp$moobase_cmdr$Model$Hub = F4(
-	function (a, b, c, d) {
-		return {color: a, pos: b, size: c, children: d};
+var _sch3lp$moobase_cmdr$Model$Hub = F3(
+	function (a, b, c) {
+		return {pos: a, size: b, children: c};
 	});
 var _sch3lp$moobase_cmdr$Model$ChildHubs = function (a) {
 	return {ctor: 'ChildHubs', _0: a};
 };
 var _sch3lp$moobase_cmdr$Model$initialHub = {
-	color: _elm_lang$core$Color$blue,
 	pos: {ctor: '_Tuple2', _0: 0, _1: 0},
 	size: 25,
 	children: _sch3lp$moobase_cmdr$Model$ChildHubs(
@@ -10686,7 +10685,6 @@ var _sch3lp$moobase_cmdr$Model$initialHub = {
 };
 var _sch3lp$moobase_cmdr$Model$newHubAt = function (pos) {
 	return {
-		color: _elm_lang$core$Color$red,
 		pos: pos,
 		size: 25,
 		children: _sch3lp$moobase_cmdr$Model$ChildHubs(
@@ -10739,7 +10737,7 @@ var _sch3lp$moobase_cmdr$View$toForm = function (hub) {
 	var x = _p0._0;
 	var y = _p0._1;
 	var shape = _evancz$elm_graphics$Collage$circle(hub.size);
-	var form = A2(_evancz$elm_graphics$Collage$filled, hub.color, shape);
+	var form = A2(_evancz$elm_graphics$Collage$filled, _elm_lang$core$Color$blue, shape);
 	return A2(
 		_evancz$elm_graphics$Collage$move,
 		{
