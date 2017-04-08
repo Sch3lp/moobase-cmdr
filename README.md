@@ -10,8 +10,7 @@ Check out the demo [here](https://sch3lp.github.io/moobase-cmdr/app)
 ## Get it working on your machine
 1. Clone this repository
 
-2. Install Elm
-[Elm](http://elm-lang.org)
+2. Install [Elm](http://elm-lang.org)
 
 3. Install Elm stuff
 ```bash
@@ -19,6 +18,7 @@ elm package install
 ```
 
 4. Install elm-test
+
 Because elm-test isn't available as regular binary, you'll need Node and install it via NPM.
 ```bash
 npm install -g elm-test
