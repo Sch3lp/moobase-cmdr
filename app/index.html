@@ -10631,9 +10631,10 @@ var _sch3lp$moobase_cmdr$Model$newHub = {
 	pos: {ctor: '_Tuple2', _0: 0, _1: 0},
 	size: 25
 };
-var _sch3lp$moobase_cmdr$Model$Model = function (a) {
-	return {hubs: a};
-};
+var _sch3lp$moobase_cmdr$Model$Model = F2(
+	function (a, b) {
+		return {hubs: a, direction: b};
+	});
 var _sch3lp$moobase_cmdr$Model$Hub = F3(
 	function (a, b, c) {
 		return {color: a, pos: b, size: c};
@@ -10641,20 +10642,32 @@ var _sch3lp$moobase_cmdr$Model$Hub = F3(
 var _sch3lp$moobase_cmdr$Update$update = F2(
 	function (msg, model) {
 		var _p0 = msg;
-		var newHubs = {
-			ctor: '::',
-			_0: _sch3lp$moobase_cmdr$Model$newHubAt(
-				{ctor: '_Tuple2', _0: 100, _1: 100}),
-			_1: model.hubs
-		};
-		return {
-			ctor: '_Tuple2',
-			_0: _elm_lang$core$Native_Utils.update(
-				model,
-				{hubs: newHubs}),
-			_1: _elm_lang$core$Platform_Cmd$none
-		};
+		if (_p0.ctor === 'LaunchHub') {
+			var newHubs = {
+				ctor: '::',
+				_0: _sch3lp$moobase_cmdr$Model$newHubAt(
+					{ctor: '_Tuple2', _0: 100, _1: 100}),
+				_1: model.hubs
+			};
+			return {
+				ctor: '_Tuple2',
+				_0: _elm_lang$core$Native_Utils.update(
+					model,
+					{hubs: newHubs}),
+				_1: _elm_lang$core$Platform_Cmd$none
+			};
+		} else {
+			var newDirection = model.direction + 90;
+			return {
+				ctor: '_Tuple2',
+				_0: _elm_lang$core$Native_Utils.update(
+					model,
+					{direction: newDirection}),
+				_1: _elm_lang$core$Platform_Cmd$none
+			};
+		}
 	});
+var _sch3lp$moobase_cmdr$Update$AimRight = {ctor: 'AimRight'};
 var _sch3lp$moobase_cmdr$Update$LaunchHub = {ctor: 'LaunchHub'};
 var _sch3lp$moobase_cmdr$View$toForm = function (hub) {
 	var _p0 = hub.pos;
@@ -10691,32 +10704,45 @@ var _sch3lp$moobase_cmdr$View$view = function (model) {
 				}),
 			_1: {
 				ctor: '::',
-				_0: _evancz$elm_graphics$Element$toHtml(
-					A3(
-						_evancz$elm_graphics$Collage$collage,
-						400,
-						400,
-						A2(_elm_lang$core$List$map, _sch3lp$moobase_cmdr$View$toForm, model.hubs))),
-				_1: {ctor: '[]'}
+				_0: A2(
+					_elm_lang$html$Html$button,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Events$onClick(_sch3lp$moobase_cmdr$Update$AimRight),
+						_1: {ctor: '[]'}
+					},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text('Aim right'),
+						_1: {ctor: '[]'}
+					}),
+				_1: {
+					ctor: '::',
+					_0: _evancz$elm_graphics$Element$toHtml(
+						A3(
+							_evancz$elm_graphics$Collage$collage,
+							400,
+							400,
+							A2(_elm_lang$core$List$map, _sch3lp$moobase_cmdr$View$toForm, model.hubs))),
+					_1: {ctor: '[]'}
+				}
 			}
 		});
 };
 var _sch3lp$moobase_cmdr$Subscription$subscriptions = function (model) {
 	return _elm_lang$core$Platform_Sub$none;
 };
+var _sch3lp$moobase_cmdr$Main$initialModel = {
+	hubs: {
+		ctor: '::',
+		_0: _sch3lp$moobase_cmdr$Model$newHub,
+		_1: {ctor: '[]'}
+	},
+	direction: 0
+};
 var _sch3lp$moobase_cmdr$Main$main = _elm_lang$html$Html$program(
 	{
-		init: {
-			ctor: '_Tuple2',
-			_0: {
-				hubs: {
-					ctor: '::',
-					_0: _sch3lp$moobase_cmdr$Model$newHub,
-					_1: {ctor: '[]'}
-				}
-			},
-			_1: _elm_lang$core$Platform_Cmd$none
-		},
+		init: {ctor: '_Tuple2', _0: _sch3lp$moobase_cmdr$Main$initialModel, _1: _elm_lang$core$Platform_Cmd$none},
 		update: _sch3lp$moobase_cmdr$Update$update,
 		view: _sch3lp$moobase_cmdr$View$view,
 		subscriptions: _sch3lp$moobase_cmdr$Subscription$subscriptions
