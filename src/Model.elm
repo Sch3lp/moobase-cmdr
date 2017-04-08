@@ -36,8 +36,8 @@ newCord from to =
 hubSize: Float
 hubSize = 25
 
-initialHub: HubTree
-initialHub = newTree (newHubAt (0,0))
+initialHubTree: HubTree
+initialHubTree = newTree (newHubAt (0,0))
 
 newHubAt: Position -> Hub
 newHubAt pos =

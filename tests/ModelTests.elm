@@ -17,7 +17,7 @@ hub: Hub
 hub = 
     { pos = (0,0)
     , size = 25
-    , children = ChildHubs([])
+    , animation = Nothing
     }
 
 launchTest: Test

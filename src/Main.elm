@@ -8,7 +8,7 @@ import View exposing (..)
 import Subscription exposing (subscriptions)
 
 initialModel: Model
-initialModel = { rootHub = initialHub
+initialModel = { rootHub = initialHubTree
                , direction = 0
                , force = 50
                }
