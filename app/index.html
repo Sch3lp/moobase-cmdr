@@ -10631,9 +10631,9 @@ var _sch3lp$moobase_cmdr$Model$newHub = {
 	pos: {ctor: '_Tuple2', _0: 0, _1: 0},
 	size: 25
 };
-var _sch3lp$moobase_cmdr$Model$Model = F2(
-	function (a, b) {
-		return {hubs: a, direction: b};
+var _sch3lp$moobase_cmdr$Model$Model = F3(
+	function (a, b, c) {
+		return {hubs: a, direction: b, force: c};
 	});
 var _sch3lp$moobase_cmdr$Model$Hub = F3(
 	function (a, b, c) {
@@ -10738,7 +10738,8 @@ var _sch3lp$moobase_cmdr$Main$initialModel = {
 		_0: _sch3lp$moobase_cmdr$Model$newHub,
 		_1: {ctor: '[]'}
 	},
-	direction: 0
+	direction: 0,
+	force: 0
 };
 var _sch3lp$moobase_cmdr$Main$main = _elm_lang$html$Html$program(
 	{
