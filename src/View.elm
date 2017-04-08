@@ -68,15 +68,6 @@ view model =
             ] <| createAllCircles model
         ]
 
-createAllForms : Model -> List Form
-createAllForms model =
-    let
-        allHubs = (model.rootHub :: findAllChildrenRecursive model.rootHub)
-        allCords = findAllCords model
-    in
-        List.map hub2Form allHubs
-        ++ List.map cord2Form allCords
-
 createAllCircles : Model -> List (Svg.Svg msg)
 createAllCircles model = 
     let
