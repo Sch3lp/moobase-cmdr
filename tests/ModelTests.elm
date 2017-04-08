@@ -6,7 +6,6 @@ import Expect
 -- import String
 
 import Model exposing (..)
-import Color exposing (Color)
 
 
 all : Test
@@ -16,9 +15,9 @@ all = Test.concat
 
 hub: Hub
 hub = 
-    { color = Color.blue
-    , pos = (0,0)
+    { pos = (0,0)
     , size = 25
+    , children = ChildHubs([])
     }
 
 launchTest: Test
