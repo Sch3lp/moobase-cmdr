@@ -31,7 +31,7 @@ newCord from to =
 
 initialHub: Hub
 initialHub =
-    { pos = (0,0)
+    { pos = (100,100)
     , size = 25
     , children = ChildHubs []
     }

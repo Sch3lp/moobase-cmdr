@@ -1,6 +1,7 @@
 module View exposing(..)
 
 import Html exposing (..)
+import Html.Attributes exposing (..)
 import Html.Events exposing (onClick)
 import Svg exposing (..)
 import Svg.Attributes exposing (..)
@@ -26,6 +27,11 @@ hub2Form hub =
         form = filled Color.blue shape
     in move (posToFloat hub.pos) form
 
+hub2Circle: Hub -> Svg.Svg msg
+hub2Circle hub = 
+    Svg.circle [cx (toString (Tuple.first hub.pos)), cy (toString  (Tuple.second hub.pos)), r "40", stroke "blue", strokeWidth "3", fill "red"][]
+      
+
 cord2Form: Cord -> Form
 cord2Form cord =
     let
@@ -34,7 +40,8 @@ cord2Form cord =
 
 view : Model -> Html.Html Msg
 view model =
-    div []
+    div [Html.Attributes.style [("height", "100%"), ("width", "100%")]]
+        [div []
         [ button [onClick LaunchHub] [Html.text "Launch"]
         , button [onClick AimLeft] [Html.text "Aim left"]
         , button [onClick AimRight] [Html.text "Aim right"]
@@ -42,10 +49,8 @@ view model =
         , button [ onClick DecrementForce ] [ Html.text "-" ]
         , span [] [ Html.text (toString model.force) ]
         , button [ onClick IncrementForce ] [ Html.text "+" ]
-        , createAllForms model
-            |> collage 400 400
-            |> toHtml
         ]
+        , svg [Html.Attributes.style [("height", "100%"), ("width", "100%")]] (createAllCircles model)]
 
 createAllForms : Model -> List Form
 createAllForms model =
@@ -55,3 +60,11 @@ createAllForms model =
     in
         List.map hub2Form allHubs
         ++ List.map cord2Form allCords
+
+createAllCircles : Model -> List (Svg.Svg msg)
+createAllCircles model = 
+    let
+        allHubs = (model.rootHub :: findAllChildrenRecursive model.rootHub)
+    in
+        List.map hub2Circle allHubs
+    
