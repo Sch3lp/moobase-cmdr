@@ -48,14 +48,16 @@ launch hub direction force = calculateLandingPoint hub.pos direction force
 
 calculateLandingPoint: Position -> Angle -> Force -> Position
 calculateLandingPoint (x,y) direction force =
-        ( x + (round 
+        ( (+) x 
+            <| round 
             <| (*) force
             <| sin 
-            <| degrees direction)
-        , y + (round 
+            <| degrees direction
+        , (+) y 
+            <| round 
             <| (*) force
             <| cos 
-            <| degrees direction)
+            <| degrees direction
         )
 
 findAllCords : Model -> List Cord
