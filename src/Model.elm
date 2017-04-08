@@ -46,19 +46,17 @@ newHubAt pos =
 launch: Hub -> Angle -> Force -> Position
 launch hub direction force = calculateLandingPoint hub.pos direction force
 
+calculateLP: Int -> (Float -> Float) -> Angle -> Force -> Int
+calculateLP i fn direction force = 
+    (+) i 
+    <| round 
+    <| (*) force
+    <| fn 
+    <| degrees direction
+
 calculateLandingPoint: Position -> Angle -> Force -> Position
 calculateLandingPoint (x,y) direction force =
-        ( (+) x 
-            <| round 
-            <| (*) force
-            <| sin 
-            <| degrees direction
-        , (+) y 
-            <| round 
-            <| (*) force
-            <| cos 
-            <| degrees direction
-        )
+        ( calculateLP x sin direction force, calculateLP y cos direction force)
 
 findAllCords : Model -> List Cord
 findAllCords model = findAllChildCordsRecursive model.rootHub
