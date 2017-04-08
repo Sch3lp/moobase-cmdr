@@ -17,6 +17,17 @@ type alias Hub =
 
 type ChildHubs = ChildHubs (List Hub)
 
+type alias Cord =
+    { from: Hub
+    , to: Hub
+    }
+
+newCord: Hub -> Hub -> Cord
+newCord from to =
+    { from = from
+    , to = to
+    }
+
 initialHub: Hub
 initialHub =
     { pos = (0,0)
@@ -39,6 +50,22 @@ launch hub direction force =
         (90 , (x,y)) -> (x + round force, y)
         (270, (x,y)) -> (x - round force, y)
         (_  , (_,_)) -> (100,100)
+
+findAllCords : Model -> List Cord
+findAllCords model = findAllChildCordsRecursive model.rootHub
+
+findAllChildCordsRecursive : Hub -> List Cord
+findAllChildCordsRecursive hub =
+    let
+        children = findAllImmediateChildren hub
+        cords = findAllImmediateChildCords hub
+    in
+        cords ++ List.concatMap findAllChildCordsRecursive children
+
+findAllImmediateChildCords : Hub -> List Cord
+findAllImmediateChildCords hub =
+    findAllImmediateChildren hub
+    |> List.map (newCord hub)
 
 
 findAllChildrenRecursive : Hub -> List Hub
