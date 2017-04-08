@@ -6,11 +6,12 @@ cd $HOME
 git config --global push.default simple
 git config --global user.email "travis@travis-ci.org"
 git config --global user.name "travis-ci"
-git clone --quiet --branch=gh-pages https://${GH_TOKEN}@github.com/robisrob/buildradiator gh-pages 2> /dev/null
+git clone --quiet --branch=gh-pages https://${GH_TOKEN}@github.com/robisrob/moobase-cmdr gh-pages 2> /dev/null
 
-mkdir -p gh-pages/app/scripts
+mkdir -p gh-pages/app
 cp $HOME/build/robisrob/moobase-cmdr/index.html ./gh-pages/app/index.html
-
+cat $HOME/build/robisrob/moobase-cmdr/index.html
+cat ./gh-pages/app/index.html
 cd gh-pages
 git add -A
 git commit -m "new deploy: $TRAVIS_BUILD_NUMBER" 
