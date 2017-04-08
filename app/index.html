@@ -8733,6 +8733,46 @@ var _sch3lp$moobase_cmdr$Update$IncrementForce = {ctor: 'IncrementForce'};
 var _sch3lp$moobase_cmdr$Update$AimLeft = {ctor: 'AimLeft'};
 var _sch3lp$moobase_cmdr$Update$AimRight = {ctor: 'AimRight'};
 var _sch3lp$moobase_cmdr$Update$LaunchHub = {ctor: 'LaunchHub'};
+var _sch3lp$moobase_cmdr$View$cord2View = function (cord) {
+	var _p0 = {ctor: '_Tuple2', _0: cord.from.pos, _1: cord.to.pos};
+	return A2(
+		_elm_lang$svg$Svg$line,
+		{
+			ctor: '::',
+			_0: _elm_lang$svg$Svg_Attributes$x1(
+				_elm_lang$core$Basics$toString(_p0._0._0)),
+			_1: {
+				ctor: '::',
+				_0: _elm_lang$svg$Svg_Attributes$y1(
+					_elm_lang$core$Basics$toString(_p0._0._1)),
+				_1: {
+					ctor: '::',
+					_0: _elm_lang$svg$Svg_Attributes$x2(
+						_elm_lang$core$Basics$toString(_p0._1._0)),
+					_1: {
+						ctor: '::',
+						_0: _elm_lang$svg$Svg_Attributes$y2(
+							_elm_lang$core$Basics$toString(_p0._1._1)),
+						_1: {
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$style(
+								{
+									ctor: '::',
+									_0: {ctor: '_Tuple2', _0: 'stroke', _1: 'rgb(0,255,0)'},
+									_1: {
+										ctor: '::',
+										_0: {ctor: '_Tuple2', _0: 'stroke-width', _1: '2'},
+										_1: {ctor: '[]'}
+									}
+								}),
+							_1: {ctor: '[]'}
+						}
+					}
+				}
+			}
+		},
+		{ctor: '[]'});
+};
 var _sch3lp$moobase_cmdr$View$hubBorder = 3;
 var _sch3lp$moobase_cmdr$View$hub2Circle = function (hub) {
 	return A2(
@@ -8771,12 +8811,16 @@ var _sch3lp$moobase_cmdr$View$hub2Circle = function (hub) {
 		{ctor: '[]'});
 };
 var _sch3lp$moobase_cmdr$View$createAllCircles = function (model) {
+	var allCords = _sch3lp$moobase_cmdr$Model$findAllCords(model);
 	var allHubs = {
 		ctor: '::',
 		_0: model.rootHub,
 		_1: _sch3lp$moobase_cmdr$Model$findAllChildrenRecursive(model.rootHub)
 	};
-	return A2(_elm_lang$core$List$map, _sch3lp$moobase_cmdr$View$hub2Circle, allHubs);
+	return A2(
+		_elm_lang$core$Basics_ops['++'],
+		A2(_elm_lang$core$List$map, _sch3lp$moobase_cmdr$View$hub2Circle, allHubs),
+		A2(_elm_lang$core$List$map, _sch3lp$moobase_cmdr$View$cord2View, allCords));
 };
 var _sch3lp$moobase_cmdr$View$view = function (model) {
 	return A2(
@@ -8925,12 +8969,12 @@ var _sch3lp$moobase_cmdr$View$view = function (model) {
 			}
 		});
 };
-var _sch3lp$moobase_cmdr$View$posToFloat = function (_p0) {
-	var _p1 = _p0;
+var _sch3lp$moobase_cmdr$View$posToFloat = function (_p1) {
+	var _p2 = _p1;
 	return {
 		ctor: '_Tuple2',
-		_0: _elm_lang$core$Basics$toFloat(_p1._0),
-		_1: _elm_lang$core$Basics$toFloat(_p1._1)
+		_0: _elm_lang$core$Basics$toFloat(_p2._0),
+		_1: _elm_lang$core$Basics$toFloat(_p2._1)
 	};
 };
 var _sch3lp$moobase_cmdr$Subscription$subscriptions = function (model) {
