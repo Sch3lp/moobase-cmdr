@@ -9,7 +9,7 @@ type alias Angle = Float
 type alias Force = Float
 
 type alias Model =
-    { rootHub: HubTree
+    { playerTrees: List HubTree
     , currentTime: TimeStamp
     , direction: Angle
     , force: Force
@@ -38,8 +38,12 @@ newCord from to =
 hubSize: Float
 hubSize = 25
 
+
 initialHubTree: HubTree
-initialHubTree = newTree (newHubAt (0,0))
+initialHubTree = initialHubTreeAt (0,0)
+
+initialHubTreeAt: Position -> HubTree
+initialHubTreeAt pos = newTree <| newHubAt pos
 
 newHubAt: Position -> Hub
 newHubAt pos =
@@ -64,7 +68,7 @@ calculateLandingPoint (x,y) direction force =
         ( calculateLP x sin direction force, calculateLP y cos (direction + 180) force) -- -180 because fuck you SVG
 
 getAllCords : Model -> List Cord
-getAllCords model = getAllChildCordsRecursive model.rootHub
+getAllCords model = List.concatMap getAllChildCordsRecursive model.playerTrees
 
 getAllChildCordsRecursive : HubTree -> List Cord
 getAllChildCordsRecursive (TreeNode hub children) =
@@ -79,7 +83,7 @@ getAllImmediateChildCords hubTree =
         TreeNode hub children -> getAllImmediateChildren hubTree |> List.map (newCord hub)
 
 updateAnimations: Model -> Model
-updateAnimations model = {model | rootHub = map (updateAnimationForHub model.currentTime) model.rootHub}
+updateAnimations model = {model | playerTrees = List.map (map (updateAnimationForHub model.currentTime)) model.playerTrees}
 
 updateAnimationForHub: TimeStamp -> Hub -> Hub
 updateAnimationForHub time hub =
