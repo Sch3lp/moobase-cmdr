@@ -5,7 +5,7 @@ import Model.Animation exposing (AnimatingPosition)
 import Model.Position exposing (Position)
 import Model.Time exposing (TimeStamp)
 import Model.Tree exposing (..)
-
+import Keyboard exposing (KeyCode)
 
 
 {- do general update stuff here -}
@@ -18,21 +18,16 @@ type Msg
     | DecrementForce
     | Tick TimeStamp
     | SelectHub Hub
+    | KeyPress KeyCode
 
 update: Msg -> Model -> (Model, Cmd Msg)
 update msg model =
     case msg of
         LaunchHub originatingHub -> launchHub model originatingHub
         AimRight ->
-            let
-                newDirection = model.direction + 15
-            in
-                ({model | direction = newDirection}, Cmd.none)
+            (aimRight model, Cmd.none)
         AimLeft ->
-            let
-                newDirection = model.direction - 15
-            in
-                ({model | direction = newDirection}, Cmd.none)
+            (aimLeft model, Cmd.none)
         IncrementForce ->
             ({model | force = model.force + 15}, Cmd.none)
         DecrementForce ->
@@ -45,6 +40,20 @@ update msg model =
                 (updatedAnimations, Cmd.none)
         SelectHub newSelectedHub ->
             ({model | selectedHub = newSelectedHub}, Cmd.none)
+        KeyPress keyCode ->
+            (handleKeyPress keyCode model, Cmd.none)
+
+aimRight model =
+    let
+        newDirection = model.direction + 15
+    in
+        {model | direction = newDirection}
+
+aimLeft model =
+    let
+        newDirection = model.direction - 15
+    in
+        {model | direction = newDirection}
 
 launchHub: Model -> Hub -> (Model, Cmd Msg)
 launchHub model originatingHub = 
@@ -72,3 +81,11 @@ setupAnimation from to model =
     , animationStart = model.currentTime
     , animationEnd = model.currentTime + 3000
     }
+
+
+handleKeyPress : KeyCode -> Model -> Model
+handleKeyPress keycode model =
+  case keycode of
+    37 -> aimLeft model
+    39 -> aimRight model
+    _ -> model
