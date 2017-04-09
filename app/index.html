@@ -8603,19 +8603,19 @@ var _sch3lp$moobase_cmdr$Model_Animation$AnimatingPosition = F4(
 	function (a, b, c, d) {
 		return {from: a, to: b, animationStart: c, animationEnd: d};
 	});
-var _sch3lp$moobase_cmdr$Model_Tree$findAllElemsRecursive = function (_p0) {
+var _sch3lp$moobase_cmdr$Model_Tree$getAllElemsRecursive = function (_p0) {
 	var _p1 = _p0;
 	return {
 		ctor: '::',
 		_0: _p1._0,
-		_1: A2(_elm_lang$core$List$concatMap, _sch3lp$moobase_cmdr$Model_Tree$findAllElemsRecursive, _p1._1)
+		_1: A2(_elm_lang$core$List$concatMap, _sch3lp$moobase_cmdr$Model_Tree$getAllElemsRecursive, _p1._1)
 	};
 };
 var _sch3lp$moobase_cmdr$Model_Tree$extractElem = function (_p2) {
 	var _p3 = _p2;
 	return _p3._0;
 };
-var _sch3lp$moobase_cmdr$Model_Tree$findAllImmediateChildren = function (_p4) {
+var _sch3lp$moobase_cmdr$Model_Tree$getAllImmediateChildren = function (_p4) {
 	var _p5 = _p4;
 	return A2(_elm_lang$core$List$map, _sch3lp$moobase_cmdr$Model_Tree$extractElem, _p5._1);
 };
@@ -8703,25 +8703,25 @@ var _sch3lp$moobase_cmdr$Model$newCord = F2(
 	function (from, to) {
 		return {from: from, to: to};
 	});
-var _sch3lp$moobase_cmdr$Model$findAllImmediateChildCords = function (hubTree) {
+var _sch3lp$moobase_cmdr$Model$getAllImmediateChildCords = function (hubTree) {
 	var _p2 = hubTree;
 	return A2(
 		_elm_lang$core$List$map,
 		_sch3lp$moobase_cmdr$Model$newCord(_p2._0),
-		_sch3lp$moobase_cmdr$Model_Tree$findAllImmediateChildren(hubTree));
+		_sch3lp$moobase_cmdr$Model_Tree$getAllImmediateChildren(hubTree));
 };
-var _sch3lp$moobase_cmdr$Model$findAllChildCordsRecursive = function (_p3) {
+var _sch3lp$moobase_cmdr$Model$getAllChildCordsRecursive = function (_p3) {
 	var _p4 = _p3;
 	var _p5 = _p4._1;
-	var cords = _sch3lp$moobase_cmdr$Model$findAllImmediateChildCords(
+	var cords = _sch3lp$moobase_cmdr$Model$getAllImmediateChildCords(
 		A2(_sch3lp$moobase_cmdr$Model_Tree$TreeNode, _p4._0, _p5));
 	return A2(
 		_elm_lang$core$Basics_ops['++'],
 		cords,
-		A2(_elm_lang$core$List$concatMap, _sch3lp$moobase_cmdr$Model$findAllChildCordsRecursive, _p5));
+		A2(_elm_lang$core$List$concatMap, _sch3lp$moobase_cmdr$Model$getAllChildCordsRecursive, _p5));
 };
-var _sch3lp$moobase_cmdr$Model$findAllCords = function (model) {
-	return _sch3lp$moobase_cmdr$Model$findAllChildCordsRecursive(model.rootHub);
+var _sch3lp$moobase_cmdr$Model$getAllCords = function (model) {
+	return _sch3lp$moobase_cmdr$Model$getAllChildCordsRecursive(model.rootHub);
 };
 var _sch3lp$moobase_cmdr$Model$Model = F3(
 	function (a, b, c) {
@@ -8879,8 +8879,8 @@ var _sch3lp$moobase_cmdr$View$hub2Circle = function (hub) {
 		{ctor: '[]'});
 };
 var _sch3lp$moobase_cmdr$View$createAllCircles = function (model) {
-	var allCords = _sch3lp$moobase_cmdr$Model$findAllCords(model);
-	var allHubs = _sch3lp$moobase_cmdr$Model_Tree$findAllElemsRecursive(model.rootHub);
+	var allCords = _sch3lp$moobase_cmdr$Model$getAllCords(model);
+	var allHubs = _sch3lp$moobase_cmdr$Model_Tree$getAllElemsRecursive(model.rootHub);
 	return A2(
 		_elm_lang$core$Basics_ops['++'],
 		A2(_elm_lang$core$List$map, _sch3lp$moobase_cmdr$View$hub2Circle, allHubs),
