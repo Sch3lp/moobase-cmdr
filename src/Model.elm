@@ -10,6 +10,7 @@ type alias Force = Float
 
 type alias Model =
     { rootHub: HubTree
+    , currentTime: TimeStamp
     , direction: Angle
     , force: Force
     }
@@ -76,3 +77,15 @@ getAllImmediateChildCords hubTree =
     case hubTree of
         TreeNode hub children -> getAllImmediateChildren hubTree |> List.map (newCord hub)
 
+updateAnimations: Model -> Model
+updateAnimations model = {model | rootHub = map (updateAnimationForHub model.currentTime) model.rootHub}
+
+updateAnimationForHub: TimeStamp -> Hub -> Hub
+updateAnimationForHub time hub =
+    case hub.animation of
+        Nothing -> hub
+        Just animation ->
+            let
+                (newPos, newAnimation) = updateAnimation time animation
+            in
+                {hub | pos = newPos, animation = newAnimation}

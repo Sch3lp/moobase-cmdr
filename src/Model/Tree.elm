@@ -33,3 +33,9 @@ getAllElemsRecursive (TreeNode elem children) =
 getAllImmediateChildren : Tree a -> List a
 getAllImmediateChildren (TreeNode _ children) = List.map extractElem children
 
+map: (a -> b) -> Tree a -> Tree b
+map f tree =
+        let
+            (TreeNode elem existingChildren) = tree
+        in
+            (TreeNode (f elem) (List.map (map f) existingChildren))

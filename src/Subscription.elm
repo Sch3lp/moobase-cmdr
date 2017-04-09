@@ -1,34 +1,18 @@
 module Subscription exposing(..)
 
--- import AnimationFrame
+import AnimationFrame
 -- import Window
 import Model exposing (..)
+import Time exposing (Time, second)
 import Update exposing (..)
 
 {- stole this from elm-joust -}
 subscriptions : Model -> Sub Msg
 subscriptions model =
-  Sub.none
--- subscriptions {ui} =
---   let
---       window = Window.resizes (\{width,height} -> ResizeWindow (width,height))
---       animation = [ AnimationFrame.diffs Tick ]
---       seconds = Time.every Time.second TimeSecond
---   in
---      (
---      case ui.screen of
---        StartScreen ->
---          [ window, seconds ]
+   fullSpeed |> Sub.batch
 
---        PlayScreen ->
---          [ window ] ++ keys ++ animation
+fullSpeed: List (Sub Msg)
+fullSpeed = [ AnimationFrame.times Tick ]
 
---        GameoverScreen ->
---          [ window ] ++ keys
-
---      ) |> Sub.batch
-
-
--- initialWindowSizeCommand : Cmd Msg
--- initialWindowSizeCommand =
---   Task.perform (\{width,height} -> ResizeWindow (width,height)) Window.size
+oncePerSecond: List (Sub Msg)
+oncePerSecond = [ Time.every second Tick ]

@@ -11,6 +11,7 @@ initialModel: Model
 initialModel = { rootHub = initialHubTree
                , direction = 0
                , force = 50
+               , currentTime = 0
                }
 
 main : Program Never Model Msg 
