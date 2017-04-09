@@ -29,12 +29,12 @@ update msg model =
                 ({model | rootHub = newRootHub}, Cmd.none)
         AimRight ->
             let
-                newDirection = model.direction + 90
+                newDirection = model.direction + 15
             in
                 ({model | direction = newDirection}, Cmd.none)
         AimLeft ->
             let
-                newDirection = model.direction - 90
+                newDirection = model.direction - 15
             in
                 ({model | direction = newDirection}, Cmd.none)
         IncrementForce ->

@@ -59,6 +59,7 @@ view model =
         [ div []
             [ button [onClick LaunchHub] [Html.text "Launch"]
             , button [onClick AimLeft]   [Html.text "Aim left"]
+            , span [] [ Html.text (toString model.direction) ]
             , button [onClick AimRight]  [Html.text "Aim right"]
             , span [] [ Html.text "Force: " ]
             , button [ onClick DecrementForce ] [ Html.text "-" ]
