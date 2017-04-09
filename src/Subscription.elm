@@ -2,6 +2,7 @@ module Subscription exposing(..)
 
 import AnimationFrame
 -- import Window
+import Configuration exposing (..)
 import Keyboard
 import Model exposing (..)
 import Time exposing (Time, second)
@@ -13,7 +14,10 @@ subscriptions model =
    selectedSpeed ++ keys
    |> Sub.batch
 
-selectedSpeed = oncePerSecond
+selectedSpeed =
+    case Configuration.speed of
+        FullSpeed -> fullSpeed
+        OncePerSecond -> oncePerSecond
 
 fullSpeed: List (Sub Msg)
 fullSpeed = [ AnimationFrame.times Tick ]
