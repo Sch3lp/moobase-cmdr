@@ -9497,6 +9497,9 @@ var _elm_lang$svg$Svg_Attributes$additive = _elm_lang$virtual_dom$VirtualDom$att
 var _elm_lang$svg$Svg_Attributes$accumulate = _elm_lang$virtual_dom$VirtualDom$attribute('accumulate');
 var _elm_lang$svg$Svg_Attributes$accelerate = _elm_lang$virtual_dom$VirtualDom$attribute('accelerate');
 var _elm_lang$svg$Svg_Attributes$accentHeight = _elm_lang$virtual_dom$VirtualDom$attribute('accent-height');
+var _sch3lp$moobase_cmdr$Configuration$OncePerSecond = {ctor: 'OncePerSecond'};
+var _sch3lp$moobase_cmdr$Configuration$FullSpeed = {ctor: 'FullSpeed'};
+var _sch3lp$moobase_cmdr$Configuration$speed = _sch3lp$moobase_cmdr$Configuration$FullSpeed;
 var _sch3lp$moobase_cmdr$Model_Animation$fractionToAbsoluteInt = F3(
 	function (low, high, point) {
 		return _elm_lang$core$Basics$round(
@@ -10192,7 +10195,14 @@ var _sch3lp$moobase_cmdr$Subscription$fullSpeed = {
 	_0: _elm_lang$animation_frame$AnimationFrame$times(_sch3lp$moobase_cmdr$Update$Tick),
 	_1: {ctor: '[]'}
 };
-var _sch3lp$moobase_cmdr$Subscription$selectedSpeed = _sch3lp$moobase_cmdr$Subscription$oncePerSecond;
+var _sch3lp$moobase_cmdr$Subscription$selectedSpeed = function () {
+	var _p0 = _sch3lp$moobase_cmdr$Configuration$speed;
+	if (_p0.ctor === 'FullSpeed') {
+		return _sch3lp$moobase_cmdr$Subscription$fullSpeed;
+	} else {
+		return _sch3lp$moobase_cmdr$Subscription$oncePerSecond;
+	}
+}();
 var _sch3lp$moobase_cmdr$Subscription$subscriptions = function (model) {
 	return _elm_lang$core$Platform_Sub$batch(
 		A2(_elm_lang$core$Basics_ops['++'], _sch3lp$moobase_cmdr$Subscription$selectedSpeed, _sch3lp$moobase_cmdr$Subscription$keys));
