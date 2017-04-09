@@ -18,6 +18,8 @@ initialHub = (newHubAt (0,0))
 aHub = (newHubAt (100,100))
 anotherHub = (newHubAt (200,200))
 
+initialHubTree = initialHubTreeAt (0,0)
+
 hubTests : Test
 hubTests =
     describe "A hubtree"
