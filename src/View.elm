@@ -26,7 +26,9 @@ worldSize = 2000
 
 hub2Circle: Hub -> Hub -> Svg.Svg Msg
 hub2Circle hub selectedHub =
-    Svg.circle (renderHub hub selectedHub) []
+    Svg.circle 
+        (renderHub hub selectedHub) 
+        []
 
 renderHub: Hub -> Hub -> List (Svg.Attribute Msg)
 renderHub hub selectedHub =
@@ -40,10 +42,24 @@ renderHub hub selectedHub =
             , onClick (SelectHub hub)
             ]
     in
-        if (selectedHub == hub ) then
+        if (selectedHub == hub) then
             stroke "red" :: baseAttributes
         else
             baseAttributes
+
+renderReticle: Angle -> Hub -> List (Svg.Svg Msg)
+renderReticle direction selectedHub =
+    let
+      (x, y) = calculateLandingPoint selectedHub.pos direction selectedHub.size
+    in
+    [ Svg.circle
+        [ cx <| toString x
+        , cy <| toString y
+        , r  <| toString <| hubBorder + 1
+        , fill "red"
+        ]
+        []
+    ]
 
 cord2View: Cord -> Svg.Svg Msg
 cord2View cord =
@@ -76,7 +92,8 @@ view model =
             , Svg.Attributes.height "100%"
             , version "1.1"
             , viewBox <| List.foldr (++) "" <| List.intersperse " " <| List.map toString [(-worldSize//2), (-worldSize//2), worldSize, worldSize]
-            ] <| createAllCircles model
+            ] 
+            <| (createAllCircles model) ++ (renderReticle model.direction model.selectedHub)
         ]
 
 createAllCircles : Model -> List (Svg.Svg Msg)
