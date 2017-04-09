@@ -69,8 +69,8 @@ view model =
 createAllCircles : Model -> List (Svg.Svg msg)
 createAllCircles model = 
     let
-        allHubs = findAllElemsRecursive model.rootHub
-        allCords = findAllCords model
+        allHubs = getAllElemsRecursive model.rootHub
+        allCords = getAllCords model
     in
         List.map hub2Circle allHubs ++ List.map cord2View allCords
     

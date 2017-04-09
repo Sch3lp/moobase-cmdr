@@ -24,12 +24,12 @@ appendChildAt parent child location =
         if (location elem) then
             appendChild parent child
         else
-            (TreeNode elem (List.map (\x -> appendChildAt x child location) existingChildren))
+            TreeNode elem <| List.map (\x -> appendChildAt x child location) existingChildren
 
-findAllElemsRecursive : Tree a -> List a
-findAllElemsRecursive (TreeNode elem children) =
-    elem :: List.concatMap  findAllElemsRecursive children
+getAllElemsRecursive : Tree a -> List a
+getAllElemsRecursive (TreeNode elem children) =
+    elem :: List.concatMap  getAllElemsRecursive children
 
-findAllImmediateChildren : Tree a -> List a
-findAllImmediateChildren (TreeNode _ children) = List.map extractElem children
+getAllImmediateChildren : Tree a -> List a
+getAllImmediateChildren (TreeNode _ children) = List.map extractElem children
 

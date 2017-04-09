@@ -61,18 +61,18 @@ calculateLandingPoint: Position -> Angle -> Force -> Position
 calculateLandingPoint (x,y) direction force =
         ( calculateLP x sin direction force, calculateLP y cos (direction + 180) force) -- -180 because fuck you SVG
 
-findAllCords : Model -> List Cord
-findAllCords model = findAllChildCordsRecursive model.rootHub
+getAllCords : Model -> List Cord
+getAllCords model = getAllChildCordsRecursive model.rootHub
 
-findAllChildCordsRecursive : HubTree -> List Cord
-findAllChildCordsRecursive (TreeNode hub children) =
+getAllChildCordsRecursive : HubTree -> List Cord
+getAllChildCordsRecursive (TreeNode hub children) =
     let
-        cords = findAllImmediateChildCords (TreeNode hub children)
+        cords = getAllImmediateChildCords (TreeNode hub children)
     in
-        cords ++ List.concatMap findAllChildCordsRecursive children
+        cords ++ List.concatMap getAllChildCordsRecursive children
 
-findAllImmediateChildCords : HubTree -> List Cord
-findAllImmediateChildCords hubTree =
+getAllImmediateChildCords : HubTree -> List Cord
+getAllImmediateChildCords hubTree =
     case hubTree of
-        TreeNode hub children -> findAllImmediateChildren hubTree |> List.map (newCord hub)
+        TreeNode hub children -> getAllImmediateChildren hubTree |> List.map (newCord hub)
 
