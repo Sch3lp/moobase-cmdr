@@ -8603,25 +8603,14 @@ var _sch3lp$moobase_cmdr$Model_Animation$AnimatingPosition = F4(
 	function (a, b, c, d) {
 		return {from: a, to: b, animationStart: c, animationEnd: d};
 	});
-var _sch3lp$moobase_cmdr$Model_Tree$foldOverTree = F3(
-	function (valueMapper, combiner, _p0) {
-		var _p1 = _p0;
-		return A3(
-			_elm_lang$core$List$foldr,
-			combiner,
-			valueMapper(_p1._0),
-			A2(
-				_elm_lang$core$List$map,
-				A2(_sch3lp$moobase_cmdr$Model_Tree$foldOverTree, valueMapper, combiner),
-				_p1._1));
-	});
-var _sch3lp$moobase_cmdr$Model_Tree$findAllElemsRecursive = A2(
-	_sch3lp$moobase_cmdr$Model_Tree$foldOverTree,
-	_elm_lang$core$List$singleton,
-	F2(
-		function (x, y) {
-			return A2(_elm_lang$core$Basics_ops['++'], x, y);
-		}));
+var _sch3lp$moobase_cmdr$Model_Tree$findAllElemsRecursive = function (_p0) {
+	var _p1 = _p0;
+	return {
+		ctor: '::',
+		_0: _p1._0,
+		_1: A2(_elm_lang$core$List$concatMap, _sch3lp$moobase_cmdr$Model_Tree$findAllElemsRecursive, _p1._1)
+	};
+};
 var _sch3lp$moobase_cmdr$Model_Tree$extractElem = function (_p2) {
 	var _p3 = _p2;
 	return _p3._0;
@@ -8656,6 +8645,21 @@ var _sch3lp$moobase_cmdr$Model_Tree$appendChild = F2(
 					{ctor: '[]'}),
 				_1: existingChildren
 			});
+	});
+var _sch3lp$moobase_cmdr$Model_Tree$appendChildAt = F3(
+	function (parent, child, location) {
+		var _p7 = parent;
+		var elem = _p7._0;
+		var existingChildren = _p7._1;
+		return location(elem) ? A2(_sch3lp$moobase_cmdr$Model_Tree$appendChild, parent, child) : A2(
+			_sch3lp$moobase_cmdr$Model_Tree$TreeNode,
+			elem,
+			A2(
+				_elm_lang$core$List$map,
+				function (x) {
+					return A3(_sch3lp$moobase_cmdr$Model_Tree$appendChildAt, x, child, location);
+				},
+				existingChildren));
 	});
 var _sch3lp$moobase_cmdr$Model$calculateLP = F4(
 	function (i, fn, direction, force) {
@@ -8692,7 +8696,7 @@ var _sch3lp$moobase_cmdr$Model$hubSize = 25;
 var _sch3lp$moobase_cmdr$Model$newHubAt = function (pos) {
 	return {pos: pos, size: _sch3lp$moobase_cmdr$Model$hubSize, animation: _elm_lang$core$Maybe$Nothing};
 };
-var _sch3lp$moobase_cmdr$Model$initialHub = _sch3lp$moobase_cmdr$Model_Tree$newTree(
+var _sch3lp$moobase_cmdr$Model$initialHubTree = _sch3lp$moobase_cmdr$Model_Tree$newTree(
 	_sch3lp$moobase_cmdr$Model$newHubAt(
 		{ctor: '_Tuple2', _0: 0, _1: 0}));
 var _sch3lp$moobase_cmdr$Model$newCord = F2(
@@ -9040,7 +9044,7 @@ var _sch3lp$moobase_cmdr$View$posToFloat = function (_p1) {
 var _sch3lp$moobase_cmdr$Subscription$subscriptions = function (model) {
 	return _elm_lang$core$Platform_Sub$none;
 };
-var _sch3lp$moobase_cmdr$Main$initialModel = {rootHub: _sch3lp$moobase_cmdr$Model$initialHub, direction: 0, force: 50};
+var _sch3lp$moobase_cmdr$Main$initialModel = {rootHub: _sch3lp$moobase_cmdr$Model$initialHubTree, direction: 0, force: 50};
 var _sch3lp$moobase_cmdr$Main$main = _elm_lang$html$Html$program(
 	{
 		init: {ctor: '_Tuple2', _0: _sch3lp$moobase_cmdr$Main$initialModel, _1: _elm_lang$core$Platform_Cmd$none},
