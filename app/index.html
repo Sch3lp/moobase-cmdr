@@ -8756,7 +8756,7 @@ var _sch3lp$moobase_cmdr$Update$update = F2(
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'AimRight':
-				var newDirection = model.direction + 90;
+				var newDirection = model.direction + 15;
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
@@ -8765,7 +8765,7 @@ var _sch3lp$moobase_cmdr$Update$update = F2(
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'AimLeft':
-				var newDirection = model.direction - 90;
+				var newDirection = model.direction - 15;
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
@@ -8939,67 +8939,79 @@ var _sch3lp$moobase_cmdr$View$view = function (model) {
 						_1: {
 							ctor: '::',
 							_0: A2(
-								_elm_lang$html$Html$button,
+								_elm_lang$html$Html$span,
+								{ctor: '[]'},
 								{
 									ctor: '::',
-									_0: _elm_lang$html$Html_Events$onClick(_sch3lp$moobase_cmdr$Update$AimRight),
-									_1: {ctor: '[]'}
-								},
-								{
-									ctor: '::',
-									_0: _elm_lang$html$Html$text('Aim right'),
+									_0: _elm_lang$html$Html$text(
+										_elm_lang$core$Basics$toString(model.direction)),
 									_1: {ctor: '[]'}
 								}),
 							_1: {
 								ctor: '::',
 								_0: A2(
-									_elm_lang$html$Html$span,
-									{ctor: '[]'},
+									_elm_lang$html$Html$button,
 									{
 										ctor: '::',
-										_0: _elm_lang$html$Html$text('Force: '),
+										_0: _elm_lang$html$Html_Events$onClick(_sch3lp$moobase_cmdr$Update$AimRight),
+										_1: {ctor: '[]'}
+									},
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html$text('Aim right'),
 										_1: {ctor: '[]'}
 									}),
 								_1: {
 									ctor: '::',
 									_0: A2(
-										_elm_lang$html$Html$button,
+										_elm_lang$html$Html$span,
+										{ctor: '[]'},
 										{
 											ctor: '::',
-											_0: _elm_lang$html$Html_Events$onClick(_sch3lp$moobase_cmdr$Update$DecrementForce),
-											_1: {ctor: '[]'}
-										},
-										{
-											ctor: '::',
-											_0: _elm_lang$html$Html$text('-'),
+											_0: _elm_lang$html$Html$text('Force: '),
 											_1: {ctor: '[]'}
 										}),
 									_1: {
 										ctor: '::',
 										_0: A2(
-											_elm_lang$html$Html$span,
-											{ctor: '[]'},
+											_elm_lang$html$Html$button,
 											{
 												ctor: '::',
-												_0: _elm_lang$html$Html$text(
-													_elm_lang$core$Basics$toString(model.force)),
+												_0: _elm_lang$html$Html_Events$onClick(_sch3lp$moobase_cmdr$Update$DecrementForce),
+												_1: {ctor: '[]'}
+											},
+											{
+												ctor: '::',
+												_0: _elm_lang$html$Html$text('-'),
 												_1: {ctor: '[]'}
 											}),
 										_1: {
 											ctor: '::',
 											_0: A2(
-												_elm_lang$html$Html$button,
+												_elm_lang$html$Html$span,
+												{ctor: '[]'},
 												{
 													ctor: '::',
-													_0: _elm_lang$html$Html_Events$onClick(_sch3lp$moobase_cmdr$Update$IncrementForce),
-													_1: {ctor: '[]'}
-												},
-												{
-													ctor: '::',
-													_0: _elm_lang$html$Html$text('+'),
+													_0: _elm_lang$html$Html$text(
+														_elm_lang$core$Basics$toString(model.force)),
 													_1: {ctor: '[]'}
 												}),
-											_1: {ctor: '[]'}
+											_1: {
+												ctor: '::',
+												_0: A2(
+													_elm_lang$html$Html$button,
+													{
+														ctor: '::',
+														_0: _elm_lang$html$Html_Events$onClick(_sch3lp$moobase_cmdr$Update$IncrementForce),
+														_1: {ctor: '[]'}
+													},
+													{
+														ctor: '::',
+														_0: _elm_lang$html$Html$text('+'),
+														_1: {ctor: '[]'}
+													}),
+												_1: {ctor: '[]'}
+											}
 										}
 									}
 								}
