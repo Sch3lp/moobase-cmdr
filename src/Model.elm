@@ -13,6 +13,7 @@ type alias Model =
     , currentTime: TimeStamp
     , direction: Angle
     , force: Force
+    , selectedHub: Hub
     }
 
 type alias Hub =

@@ -9,7 +9,7 @@ import Update exposing (..)
 {- stole this from elm-joust -}
 subscriptions : Model -> Sub Msg
 subscriptions model =
-   fullSpeed |> Sub.batch
+   oncePerSecond |> Sub.batch
 
 fullSpeed: List (Sub Msg)
 fullSpeed = [ AnimationFrame.times Tick ]

@@ -21,7 +21,7 @@ posToFloat (x, y) =  (toFloat x, toFloat y)
 hubBorder: Float
 hubBorder = 3
 
-hub2Circle: Hub -> Svg.Svg msg
+hub2Circle: Hub -> Svg.Svg Msg
 hub2Circle hub = 
     Svg.circle 
         [ cx <| toString (Tuple.first  hub.pos)
@@ -30,9 +30,10 @@ hub2Circle hub =
         , stroke "red"
         , strokeWidth <| toString hubBorder
         , fill "blue"
+        , onClick (SelectHub hub)
         ] []
 
-cord2View: Cord -> Svg.Svg msg
+cord2View: Cord -> Svg.Svg Msg
 cord2View cord =
     case (cord.from.pos, cord.to.pos)
     of ((fromX,fromY), (toX,toY)) ->
@@ -49,7 +50,7 @@ view : Model -> Html.Html Msg
 view model =
     div [Html.Attributes.style [("height", "100%"), ("width", "100%")]]
         [ div []
-            [ button [onClick LaunchHub] [Html.text "Launch"]
+            [ button [onClick <| LaunchHub model.selectedHub] [Html.text "Launch"]
             , button [onClick AimLeft]   [Html.text "Aim left"]
             , span [] [ Html.text (toString model.direction) ]
             , button [onClick AimRight]  [Html.text "Aim right"]
@@ -66,7 +67,7 @@ view model =
             ] <| createAllCircles model
         ]
 
-createAllCircles : Model -> List (Svg.Svg msg)
+createAllCircles : Model -> List (Svg.Svg Msg)
 createAllCircles model = 
     let
         allHubs = getAllElemsRecursive model.rootHub

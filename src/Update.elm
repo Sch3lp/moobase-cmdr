@@ -11,24 +11,25 @@ import Model.Tree exposing (..)
 {- do general update stuff here -}
 
 type Msg
-    = LaunchHub
+    = LaunchHub Hub
     | AimRight
     | AimLeft
     | IncrementForce
     | DecrementForce
     | Tick TimeStamp
+    | SelectHub Hub
 
 update: Msg -> Model -> (Model, Cmd Msg)
 update msg model =
     case msg of
         -- TODO vincenve need to add the hub we're launching from, for now always root hub
-        LaunchHub ->
+        LaunchHub originatingHub ->
             let
                 oldRootHub = model.rootHub
-                targetPosition = launch (extractElem oldRootHub) model.direction model.force
-                newHub = (newHubAt (extractElem oldRootHub).pos)
-                newAnimatedHub = {newHub | animation = setupAnimation (extractElem oldRootHub).pos targetPosition model}
-                newRootHub = appendChild oldRootHub newAnimatedHub
+                targetPosition = launch originatingHub model.direction model.force
+                newHub = (newHubAt originatingHub.pos)
+                newAnimatedHub = {newHub | animation = setupAnimation originatingHub.pos targetPosition model}
+                newRootHub = appendChildAt oldRootHub newAnimatedHub (\x -> x == originatingHub)
             in
                 ({model | rootHub = newRootHub}, Cmd.none)
         AimRight ->
@@ -51,6 +52,8 @@ update msg model =
                 updatedAnimations = updateAnimations updatedTime
             in
                 (updatedAnimations, Cmd.none)
+        SelectHub newSelectedHub ->
+            ({model | selectedHub = newSelectedHub}, Cmd.none)
 
 setupAnimation: Position -> Position -> Model -> Maybe AnimatingPosition
 setupAnimation from to model =
