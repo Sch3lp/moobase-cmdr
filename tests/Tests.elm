@@ -39,38 +39,38 @@ hubTests =
         , describe "when listing its direct children"
              [ test "given a hub without children, then no children are returned" <|
                  \() ->
-                     findAllImmediateChildren initialHubTree |> Expect.equal []
+                     getAllImmediateChildren initialHubTree |> Expect.equal []
              , test "given a hub with children, then return the children" <|
                  \() ->
                      let
                          hubWithChildren = appendChild initialHubTree aHub
                      in
-                         findAllImmediateChildren hubWithChildren |> Expect.equal [aHub]
+                         getAllImmediateChildren hubWithChildren |> Expect.equal [aHub]
              , test "given a hub with grandchildren, then return only the immediate children" <|
                  \() ->
                      let
                          hubWithChildren = appendChild initialHubTree aHub
                          hubWithGrandchildren = appendChildAt hubWithChildren anotherHub (\x -> x == aHub)
                      in
-                         findAllImmediateChildren hubWithGrandchildren |> Expect.equal [aHub]
+                         getAllImmediateChildren hubWithGrandchildren |> Expect.equal [aHub]
              ]
         , describe "when listing all elements recursively"
               [ test "given an initial hubtree, then the initial hub is returned" <|
                   \() ->
-                      findAllElemsRecursive initialHubTree |> Expect.equal [initialHub]
+                      getAllElemsRecursive initialHubTree |> Expect.equal [initialHub]
               , test "given a hub with children, then the initial hub and the child are returned" <|
                   \() ->
                       let
                           hubWithChildren = appendChild initialHubTree aHub
                       in
-                          findAllElemsRecursive hubWithChildren |> Expect.equal [initialHub, aHub]
+                          getAllElemsRecursive hubWithChildren |> Expect.equal [initialHub, aHub]
               , test "given a hub with grandchildren, then the initial hub and all children are returned" <|
                   \() ->
                       let
                           hubWithChildren = appendChild initialHubTree aHub
                           hubWithGrandchildren = appendChildAt hubWithChildren anotherHub (\x -> x == aHub)
                       in
-                          findAllElemsRecursive hubWithGrandchildren |> Expect.equal [initialHub, aHub, anotherHub]
+                          getAllElemsRecursive hubWithGrandchildren |> Expect.equal [initialHub, aHub, anotherHub]
               ]
         ]
 
@@ -93,7 +93,7 @@ exampleTests =
             , fuzz (list int) "Sorting a list does not change its length" <|
                 \aList ->
                     List.sort aList |> List.length |> Expect.equal (List.length aList)
-            , fuzzWith { runs = 1000 } int "List.member will find an integer in a list containing it" <|
+            , fuzzWith { runs = 1000 } int "List.member will get an integer in a list containing it" <|
                 \i ->
                     List.member i [ i ] |> Expect.true "If you see this, List.member returned False!"
             , fuzz2 string string "The length of a string equals the sum of its substrings' lengths" <|
