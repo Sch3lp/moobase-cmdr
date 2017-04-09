@@ -9168,10 +9168,6 @@ var _sch3lp$moobase_cmdr$Model_Animation$absoluteToFraction = F3(
 	function (low, high, point) {
 		return (point - low) / (high - low);
 	});
-var _sch3lp$moobase_cmdr$Model_Animation$updateAnimationStatus = F2(
-	function (newTimeStamp, animatingPosition) {
-		return (_elm_lang$core$Native_Utils.cmp(animatingPosition.animationEnd, newTimeStamp) < 1) ? _elm_lang$core$Maybe$Just(animatingPosition) : _elm_lang$core$Maybe$Nothing;
-	});
 var _sch3lp$moobase_cmdr$Model_Animation$updateAnimation = F2(
 	function (newTimeStamp, animatingPosition) {
 		if (_elm_lang$core$Native_Utils.cmp(animatingPosition.animationEnd, newTimeStamp) > 0) {
@@ -9347,9 +9343,9 @@ var _sch3lp$moobase_cmdr$Model$getAllChildCordsRecursive = function (_p5) {
 var _sch3lp$moobase_cmdr$Model$getAllCords = function (model) {
 	return _sch3lp$moobase_cmdr$Model$getAllChildCordsRecursive(model.rootHub);
 };
-var _sch3lp$moobase_cmdr$Model$Model = F4(
-	function (a, b, c, d) {
-		return {rootHub: a, currentTime: b, direction: c, force: d};
+var _sch3lp$moobase_cmdr$Model$Model = F5(
+	function (a, b, c, d, e) {
+		return {rootHub: a, currentTime: b, direction: c, force: d, selectedHub: e};
 	});
 var _sch3lp$moobase_cmdr$Model$Hub = F3(
 	function (a, b, c) {
@@ -9369,24 +9365,22 @@ var _sch3lp$moobase_cmdr$Update$update = F2(
 		var _p0 = msg;
 		switch (_p0.ctor) {
 			case 'LaunchHub':
-				var oldRootHub = model.rootHub;
-				var targetPosition = A3(
-					_sch3lp$moobase_cmdr$Model$launch,
-					_sch3lp$moobase_cmdr$Model_Tree$extractElem(oldRootHub),
-					model.direction,
-					model.force);
-				var newHub = _sch3lp$moobase_cmdr$Model$newHubAt(
-					_sch3lp$moobase_cmdr$Model_Tree$extractElem(oldRootHub).pos);
+				var _p1 = _p0._0;
+				var newHub = _sch3lp$moobase_cmdr$Model$newHubAt(_p1.pos);
+				var targetPosition = A3(_sch3lp$moobase_cmdr$Model$launch, _p1, model.direction, model.force);
 				var newAnimatedHub = _elm_lang$core$Native_Utils.update(
 					newHub,
 					{
-						animation: A3(
-							_sch3lp$moobase_cmdr$Update$setupAnimation,
-							_sch3lp$moobase_cmdr$Model_Tree$extractElem(oldRootHub).pos,
-							targetPosition,
-							model)
+						animation: A3(_sch3lp$moobase_cmdr$Update$setupAnimation, _p1.pos, targetPosition, model)
 					});
-				var newRootHub = A2(_sch3lp$moobase_cmdr$Model_Tree$appendChild, oldRootHub, newAnimatedHub);
+				var oldRootHub = model.rootHub;
+				var newRootHub = A3(
+					_sch3lp$moobase_cmdr$Model_Tree$appendChildAt,
+					oldRootHub,
+					newAnimatedHub,
+					function (x) {
+						return _elm_lang$core$Native_Utils.eq(x, _p1);
+					});
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
@@ -9428,14 +9422,25 @@ var _sch3lp$moobase_cmdr$Update$update = F2(
 						{force: model.force - 15}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
-			default:
+			case 'Tick':
 				var updatedTime = _elm_lang$core$Native_Utils.update(
 					model,
 					{currentTime: _p0._0});
 				var updatedAnimations = _sch3lp$moobase_cmdr$Model$updateAnimations(updatedTime);
 				return {ctor: '_Tuple2', _0: updatedAnimations, _1: _elm_lang$core$Platform_Cmd$none};
+			default:
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{selectedHub: _p0._0}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
 		}
 	});
+var _sch3lp$moobase_cmdr$Update$SelectHub = function (a) {
+	return {ctor: 'SelectHub', _0: a};
+};
 var _sch3lp$moobase_cmdr$Update$Tick = function (a) {
 	return {ctor: 'Tick', _0: a};
 };
@@ -9443,7 +9448,9 @@ var _sch3lp$moobase_cmdr$Update$DecrementForce = {ctor: 'DecrementForce'};
 var _sch3lp$moobase_cmdr$Update$IncrementForce = {ctor: 'IncrementForce'};
 var _sch3lp$moobase_cmdr$Update$AimLeft = {ctor: 'AimLeft'};
 var _sch3lp$moobase_cmdr$Update$AimRight = {ctor: 'AimRight'};
-var _sch3lp$moobase_cmdr$Update$LaunchHub = {ctor: 'LaunchHub'};
+var _sch3lp$moobase_cmdr$Update$LaunchHub = function (a) {
+	return {ctor: 'LaunchHub', _0: a};
+};
 var _sch3lp$moobase_cmdr$View$cord2View = function (cord) {
 	var _p0 = {ctor: '_Tuple2', _0: cord.from.pos, _1: cord.to.pos};
 	return A2(
@@ -9512,7 +9519,12 @@ var _sch3lp$moobase_cmdr$View$hub2Circle = function (hub) {
 							_1: {
 								ctor: '::',
 								_0: _elm_lang$svg$Svg_Attributes$fill('blue'),
-								_1: {ctor: '[]'}
+								_1: {
+									ctor: '::',
+									_0: _elm_lang$html$Html_Events$onClick(
+										_sch3lp$moobase_cmdr$Update$SelectHub(hub)),
+									_1: {ctor: '[]'}
+								}
 							}
 						}
 					}
@@ -9557,7 +9569,8 @@ var _sch3lp$moobase_cmdr$View$view = function (model) {
 						_elm_lang$html$Html$button,
 						{
 							ctor: '::',
-							_0: _elm_lang$html$Html_Events$onClick(_sch3lp$moobase_cmdr$Update$LaunchHub),
+							_0: _elm_lang$html$Html_Events$onClick(
+								_sch3lp$moobase_cmdr$Update$LaunchHub(model.selectedHub)),
 							_1: {ctor: '[]'}
 						},
 						{
@@ -9707,9 +9720,15 @@ var _sch3lp$moobase_cmdr$Subscription$fullSpeed = {
 	_1: {ctor: '[]'}
 };
 var _sch3lp$moobase_cmdr$Subscription$subscriptions = function (model) {
-	return _elm_lang$core$Platform_Sub$batch(_sch3lp$moobase_cmdr$Subscription$fullSpeed);
+	return _elm_lang$core$Platform_Sub$batch(_sch3lp$moobase_cmdr$Subscription$oncePerSecond);
 };
-var _sch3lp$moobase_cmdr$Main$initialModel = {rootHub: _sch3lp$moobase_cmdr$Model$initialHubTree, direction: 0, force: 50, currentTime: 0};
+var _sch3lp$moobase_cmdr$Main$initialModel = {
+	rootHub: _sch3lp$moobase_cmdr$Model$initialHubTree,
+	direction: 0,
+	force: 50,
+	currentTime: 0,
+	selectedHub: _sch3lp$moobase_cmdr$Model_Tree$extractElem(_sch3lp$moobase_cmdr$Model$initialHubTree)
+};
 var _sch3lp$moobase_cmdr$Main$main = _elm_lang$html$Html$program(
 	{
 		init: {ctor: '_Tuple2', _0: _sch3lp$moobase_cmdr$Main$initialModel, _1: _elm_lang$core$Platform_Cmd$none},
