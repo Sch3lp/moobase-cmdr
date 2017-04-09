@@ -9275,10 +9275,11 @@ var _sch3lp$moobase_cmdr$Model$updateAnimations = function (model) {
 	return _elm_lang$core$Native_Utils.update(
 		model,
 		{
-			rootHub: A2(
-				_sch3lp$moobase_cmdr$Model_Tree$map,
-				_sch3lp$moobase_cmdr$Model$updateAnimationForHub(model.currentTime),
-				model.rootHub)
+			playerTrees: A2(
+				_elm_lang$core$List$map,
+				_sch3lp$moobase_cmdr$Model_Tree$map(
+					_sch3lp$moobase_cmdr$Model$updateAnimationForHub(model.currentTime)),
+				model.playerTrees)
 		});
 };
 var _sch3lp$moobase_cmdr$Model$calculateLP = F4(
@@ -9316,9 +9317,12 @@ var _sch3lp$moobase_cmdr$Model$hubSize = 25;
 var _sch3lp$moobase_cmdr$Model$newHubAt = function (pos) {
 	return {pos: pos, size: _sch3lp$moobase_cmdr$Model$hubSize, animation: _elm_lang$core$Maybe$Nothing};
 };
-var _sch3lp$moobase_cmdr$Model$initialHubTree = _sch3lp$moobase_cmdr$Model_Tree$newTree(
-	_sch3lp$moobase_cmdr$Model$newHubAt(
-		{ctor: '_Tuple2', _0: 0, _1: 0}));
+var _sch3lp$moobase_cmdr$Model$initialHubTreeAt = function (pos) {
+	return _sch3lp$moobase_cmdr$Model_Tree$newTree(
+		_sch3lp$moobase_cmdr$Model$newHubAt(pos));
+};
+var _sch3lp$moobase_cmdr$Model$initialHubTree = _sch3lp$moobase_cmdr$Model$initialHubTreeAt(
+	{ctor: '_Tuple2', _0: 0, _1: 0});
 var _sch3lp$moobase_cmdr$Model$newCord = F2(
 	function (from, to) {
 		return {from: from, to: to};
@@ -9341,11 +9345,11 @@ var _sch3lp$moobase_cmdr$Model$getAllChildCordsRecursive = function (_p5) {
 		A2(_elm_lang$core$List$concatMap, _sch3lp$moobase_cmdr$Model$getAllChildCordsRecursive, _p7));
 };
 var _sch3lp$moobase_cmdr$Model$getAllCords = function (model) {
-	return _sch3lp$moobase_cmdr$Model$getAllChildCordsRecursive(model.rootHub);
+	return A2(_elm_lang$core$List$concatMap, _sch3lp$moobase_cmdr$Model$getAllChildCordsRecursive, model.playerTrees);
 };
 var _sch3lp$moobase_cmdr$Model$Model = F5(
 	function (a, b, c, d, e) {
-		return {rootHub: a, currentTime: b, direction: c, force: d, selectedHub: e};
+		return {playerTrees: a, currentTime: b, direction: c, force: d, selectedHub: e};
 	});
 var _sch3lp$moobase_cmdr$Model$Hub = F3(
 	function (a, b, c) {
@@ -9360,32 +9364,39 @@ var _sch3lp$moobase_cmdr$Update$setupAnimation = F3(
 		return _elm_lang$core$Maybe$Just(
 			{from: from, to: to, animationStart: model.currentTime, animationEnd: model.currentTime + 3000});
 	});
+var _sch3lp$moobase_cmdr$Update$updateTreeAfterLaunch = F3(
+	function (model, originatingHub, tree) {
+		var newHub = _sch3lp$moobase_cmdr$Model$newHubAt(originatingHub.pos);
+		var targetPosition = A3(_sch3lp$moobase_cmdr$Model$launch, originatingHub, model.direction, model.force);
+		var newAnimatedHub = _elm_lang$core$Native_Utils.update(
+			newHub,
+			{
+				animation: A3(_sch3lp$moobase_cmdr$Update$setupAnimation, originatingHub.pos, targetPosition, model)
+			});
+		var newRootHub = A3(
+			_sch3lp$moobase_cmdr$Model_Tree$appendChildAt,
+			tree,
+			newAnimatedHub,
+			function (x) {
+				return _elm_lang$core$Native_Utils.eq(x, originatingHub);
+			});
+		return newRootHub;
+	});
 var _sch3lp$moobase_cmdr$Update$update = F2(
 	function (msg, model) {
 		var _p0 = msg;
 		switch (_p0.ctor) {
 			case 'LaunchHub':
-				var _p1 = _p0._0;
-				var newHub = _sch3lp$moobase_cmdr$Model$newHubAt(_p1.pos);
-				var targetPosition = A3(_sch3lp$moobase_cmdr$Model$launch, _p1, model.direction, model.force);
-				var newAnimatedHub = _elm_lang$core$Native_Utils.update(
-					newHub,
-					{
-						animation: A3(_sch3lp$moobase_cmdr$Update$setupAnimation, _p1.pos, targetPosition, model)
-					});
-				var oldRootHub = model.rootHub;
-				var newRootHub = A3(
-					_sch3lp$moobase_cmdr$Model_Tree$appendChildAt,
-					oldRootHub,
-					newAnimatedHub,
-					function (x) {
-						return _elm_lang$core$Native_Utils.eq(x, _p1);
-					});
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
-						{rootHub: newRootHub}),
+						{
+							playerTrees: A2(
+								_elm_lang$core$List$map,
+								A2(_sch3lp$moobase_cmdr$Update$updateTreeAfterLaunch, model, _p0._0),
+								model.playerTrees)
+						}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'AimRight':
@@ -9542,7 +9553,7 @@ var _sch3lp$moobase_cmdr$View$hub2Circle = F2(
 	});
 var _sch3lp$moobase_cmdr$View$createAllCircles = function (model) {
 	var allCords = _sch3lp$moobase_cmdr$Model$getAllCords(model);
-	var allHubs = _sch3lp$moobase_cmdr$Model_Tree$getAllElemsRecursive(model.rootHub);
+	var allHubs = A2(_elm_lang$core$List$concatMap, _sch3lp$moobase_cmdr$Model_Tree$getAllElemsRecursive, model.playerTrees);
 	return A2(
 		_elm_lang$core$Basics_ops['++'],
 		A2(
@@ -9765,7 +9776,17 @@ var _sch3lp$moobase_cmdr$Subscription$subscriptions = function (model) {
 	return _elm_lang$core$Platform_Sub$batch(_sch3lp$moobase_cmdr$Subscription$fullSpeed);
 };
 var _sch3lp$moobase_cmdr$Main$initialModel = {
-	rootHub: _sch3lp$moobase_cmdr$Model$initialHubTree,
+	playerTrees: {
+		ctor: '::',
+		_0: _sch3lp$moobase_cmdr$Model$initialHubTreeAt(
+			{ctor: '_Tuple2', _0: -200, _1: -200}),
+		_1: {
+			ctor: '::',
+			_0: _sch3lp$moobase_cmdr$Model$initialHubTreeAt(
+				{ctor: '_Tuple2', _0: 200, _1: 200}),
+			_1: {ctor: '[]'}
+		}
+	},
 	direction: 0,
 	force: 50,
 	currentTime: 0,
