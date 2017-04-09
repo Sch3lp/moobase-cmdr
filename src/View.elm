@@ -8,6 +8,8 @@ import Svg.Attributes exposing (..)
 
 
 import Model exposing (..)
+import Model.Position exposing (..)
+import Model.Tree exposing (..)
 
 import Update exposing (..)
 
@@ -49,6 +51,7 @@ view model =
         [ div []
             [ button [onClick LaunchHub] [Html.text "Launch"]
             , button [onClick AimLeft]   [Html.text "Aim left"]
+            , span [] [ Html.text (toString model.direction) ]
             , button [onClick AimRight]  [Html.text "Aim right"]
             , span [] [ Html.text "Force: " ]
             , button [ onClick DecrementForce ] [ Html.text "-" ]
@@ -66,7 +69,7 @@ view model =
 createAllCircles : Model -> List (Svg.Svg msg)
 createAllCircles model = 
     let
-        allHubs = (model.rootHub :: findAllChildrenRecursive model.rootHub)
+        allHubs = findAllElemsRecursive model.rootHub
         allCords = findAllCords model
     in
         List.map hub2Circle allHubs ++ List.map cord2View allCords

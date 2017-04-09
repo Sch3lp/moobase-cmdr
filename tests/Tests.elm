@@ -6,6 +6,7 @@ import Fuzz exposing (list, int, tuple, string)
 import String
 
 import Model exposing (..)
+import Model.Tree exposing (..)
 
 all : Test
 all = describe "moobase commander"
@@ -13,45 +14,63 @@ all = describe "moobase commander"
     , exampleTests
     ]
 
+initialHub = (newHubAt (0,0))
+aHub = (newHubAt (100,100))
+anotherHub = (newHubAt (200,200))
+
 hubTests : Test
 hubTests =
-    describe "A hub"
+    describe "A hubtree"
         [ describe "when adding children"
-             [ test "given a hub without children, returns a new hub with a child" <|
+             [ test "given an initial hubtree, returns a new hubtree with a child" <|
                  \() ->
                     let
-                        hubWithChildren = appendChildToHub initialHub initialHub
+                        hubWithChildren = appendChild initialHubTree aHub
                     in
-                        hubWithChildren.children |> Expect.equal (ChildHubs [initialHub])
+                        hubWithChildren |> Expect.equal (TreeNode initialHub [TreeNode aHub []])
+             , test "given a hubtree with child, returns a new hubtree with grandchildren" <|
+                 \() ->
+                    let
+                        hubWithChildren = appendChild initialHubTree aHub
+                        hubWithGrandchildren = appendChildAt hubWithChildren anotherHub (\x -> x == aHub)
+                    in
+                        hubWithGrandchildren |> Expect.equal (TreeNode initialHub [TreeNode aHub [TreeNode anotherHub []]])
              ]
-          , describe "when listing its direct children"
-            [ test "given a hub without children, then no children are returned" <|
-                \() ->
-                    findAllImmediateChildren initialHub |> Expect.equal []
-            , test "given a hub with children, then return the children" <|
-                \() ->
-                    let
-                        hubWithChildren = appendChildToHub initialHub initialHub
-                    in
-                        findAllImmediateChildren hubWithChildren |> Expect.equal [initialHub]
-            , test "given a hub with grandchildren, then return only the immediate children" <|
-                \() ->
-                    let
-                        hubWithChildren = appendChildToHub initialHub initialHub
-                        hubWithGrandchildren = appendChildToHub initialHub hubWithChildren
-                    in
-                        findAllImmediateChildren hubWithGrandchildren |> Expect.equal [hubWithChildren]
-            ]
-        , describe "when listing its children recursively"
-              [ test "given a hub without children, then no children are returned" <|
+        , describe "when listing its direct children"
+             [ test "given a hub without children, then no children are returned" <|
+                 \() ->
+                     findAllImmediateChildren initialHubTree |> Expect.equal []
+             , test "given a hub with children, then return the children" <|
+                 \() ->
+                     let
+                         hubWithChildren = appendChild initialHubTree aHub
+                     in
+                         findAllImmediateChildren hubWithChildren |> Expect.equal [aHub]
+             , test "given a hub with grandchildren, then return only the immediate children" <|
+                 \() ->
+                     let
+                         hubWithChildren = appendChild initialHubTree aHub
+                         hubWithGrandchildren = appendChildAt hubWithChildren anotherHub (\x -> x == aHub)
+                     in
+                         findAllImmediateChildren hubWithGrandchildren |> Expect.equal [aHub]
+             ]
+        , describe "when listing all elements recursively"
+              [ test "given an initial hubtree, then the initial hub is returned" <|
                   \() ->
-                      findAllChildrenRecursive initialHub |> Expect.equal []
-              , test "given a hub with children, then return the children" <|
+                      findAllElemsRecursive initialHubTree |> Expect.equal [initialHub]
+              , test "given a hub with children, then the initial hub and the child are returned" <|
                   \() ->
                       let
-                          hubWithChildren = appendChildToHub initialHub initialHub
+                          hubWithChildren = appendChild initialHubTree aHub
                       in
-                          findAllChildrenRecursive hubWithChildren |> Expect.equal [initialHub]
+                          findAllElemsRecursive hubWithChildren |> Expect.equal [initialHub, aHub]
+              , test "given a hub with grandchildren, then the initial hub and all children are returned" <|
+                  \() ->
+                      let
+                          hubWithChildren = appendChild initialHubTree aHub
+                          hubWithGrandchildren = appendChildAt hubWithChildren anotherHub (\x -> x == aHub)
+                      in
+                          findAllElemsRecursive hubWithGrandchildren |> Expect.equal [initialHub, aHub, anotherHub]
               ]
         ]
 

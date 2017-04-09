@@ -1,11 +1,15 @@
 module Model exposing(..)
 
+import Model.Animation exposing (..)
+import Model.Position exposing (..)
+import Model.Time exposing (..)
+import Model.Tree exposing (..)
+
 type alias Angle = Float
 type alias Force = Float
-type alias Position = (Int, Int)
 
 type alias Model =
-    { rootHub: Hub
+    { rootHub: HubTree
     , direction: Angle
     , force: Force
     }
@@ -13,10 +17,10 @@ type alias Model =
 type alias Hub =
     { pos : Position
     , size : Float
-    , children : ChildHubs
+    , animation : Maybe AnimatingPosition
     }
 
-type ChildHubs = ChildHubs (List Hub)
+type alias HubTree = Tree Hub
 
 type alias Cord =
     { from: Hub
@@ -32,18 +36,14 @@ newCord from to =
 hubSize: Float
 hubSize = 25
 
-initialHub: Hub
-initialHub =
-    { pos = (0,0)
-    , size = hubSize
-    , children = ChildHubs []
-    }
+initialHubTree: HubTree
+initialHubTree = newTree (newHubAt (0,0))
 
 newHubAt: Position -> Hub
 newHubAt pos =
     { pos = pos
     , size = hubSize
-    , children = ChildHubs []
+    , animation = Nothing
     }
 
 launch: Hub -> Angle -> Force -> Position
@@ -64,40 +64,15 @@ calculateLandingPoint (x,y) direction force =
 findAllCords : Model -> List Cord
 findAllCords model = findAllChildCordsRecursive model.rootHub
 
-findAllChildCordsRecursive : Hub -> List Cord
-findAllChildCordsRecursive hub =
+findAllChildCordsRecursive : HubTree -> List Cord
+findAllChildCordsRecursive (TreeNode hub children) =
     let
-        children = findAllImmediateChildren hub
-        cords = findAllImmediateChildCords hub
+        cords = findAllImmediateChildCords (TreeNode hub children)
     in
         cords ++ List.concatMap findAllChildCordsRecursive children
 
-findAllImmediateChildCords : Hub -> List Cord
-findAllImmediateChildCords hub =
-    findAllImmediateChildren hub
-    |> List.map (newCord hub)
+findAllImmediateChildCords : HubTree -> List Cord
+findAllImmediateChildCords hubTree =
+    case hubTree of
+        TreeNode hub children -> findAllImmediateChildren hubTree |> List.map (newCord hub)
 
-
-findAllChildrenRecursive : Hub -> List Hub
-findAllChildrenRecursive hub =
-    let
-        children = findAllImmediateChildren hub
-    in
-        children ++ List.concatMap findAllChildrenRecursive children
-
-findAllImmediateChildren : Hub -> List Hub
-findAllImmediateChildren hub =
-    case hub.children of
-        ChildHubs (children) -> children
-
-appendChildToHub: Hub -> Hub -> Hub
-appendChildToHub parent child =
-    let
-        newChildren = appendChildWithUnwrap parent.children child
-    in
-        {parent | children = newChildren}
-
--- I don't know how to do this inline, so I'll add another function!
-appendChildWithUnwrap: ChildHubs -> Hub -> ChildHubs
-appendChildWithUnwrap (ChildHubs existingChildren) child =
-    ChildHubs (child :: existingChildren)
