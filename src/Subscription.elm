@@ -2,6 +2,7 @@ module Subscription exposing(..)
 
 import AnimationFrame
 -- import Window
+import Keyboard
 import Model exposing (..)
 import Time exposing (Time, second)
 import Update exposing (..)
@@ -9,10 +10,16 @@ import Update exposing (..)
 {- stole this from elm-joust -}
 subscriptions : Model -> Sub Msg
 subscriptions model =
-   fullSpeed |> Sub.batch
+   selectedSpeed ++ keys
+   |> Sub.batch
+
+selectedSpeed = oncePerSecond
 
 fullSpeed: List (Sub Msg)
 fullSpeed = [ AnimationFrame.times Tick ]
 
 oncePerSecond: List (Sub Msg)
 oncePerSecond = [ Time.every second Tick ]
+
+keys: List (Sub Msg)
+keys = [ Keyboard.downs KeyPress ]
