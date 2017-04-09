@@ -24,21 +24,21 @@ hubBorder = 3
 worldSize: Int
 worldSize = 2000
 
-hub2Circle: Hub -> Hub -> Svg.Svg Msg
-hub2Circle hub selectedHub =
+hub2Circle: Hub -> Hub -> String -> Svg.Svg Msg
+hub2Circle hub selectedHub color =
     Svg.circle 
-        (renderHub hub selectedHub) 
+        (renderHub hub selectedHub color)
         []
 
-renderHub: Hub -> Hub -> List (Svg.Attribute Msg)
-renderHub hub selectedHub =
+renderHub: Hub -> Hub -> String -> List (Svg.Attribute Msg)
+renderHub hub selectedHub color =
     let
         baseAttributes =
             [ cx <| toString (Tuple.first  hub.pos)
             , cy <| toString (Tuple.second hub.pos)
             , r  <| toString (hub.size - hubBorder)
             , strokeWidth <| toString hubBorder
-            , fill "blue"
+            , fill color
             , onClick (SelectHub hub)
             ]
     in
@@ -96,11 +96,15 @@ view model =
             <| (createAllCircles model) ++ (renderReticle model.direction model.selectedHub)
         ]
 
+getPlayerTreesWithColor: Model -> List (Tree (Hub, String))
+getPlayerTreesWithColor {players} = List.map (\p -> Model.Tree.map (\hub -> (hub, if p.player == Player1 then "blue" else "orange")) p.network) players
+
 createAllCircles : Model -> List (Svg.Svg Msg)
 createAllCircles model = 
     let
-        allHubs = List.concatMap getAllElemsRecursive <| getPlayerTrees model
+        allHubs: List (Hub, String)
+        allHubs = List.concatMap getAllElemsRecursive <| getPlayerTreesWithColor model
         allCords = getAllCords model
     in
-        List.map (\hub -> hub2Circle hub model.selectedHub) allHubs ++ List.map cord2View allCords
+        List.map (\(hub, color) -> hub2Circle hub model.selectedHub color) allHubs ++ List.map cord2View allCords
     
