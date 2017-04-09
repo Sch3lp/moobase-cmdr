@@ -22,7 +22,6 @@ type Msg
 update: Msg -> Model -> (Model, Cmd Msg)
 update msg model =
     case msg of
-        -- TODO vincenve need to add the hub we're launching from, for now always root hub
         LaunchHub originatingHub ->
             let
                 oldRootHub = model.rootHub
