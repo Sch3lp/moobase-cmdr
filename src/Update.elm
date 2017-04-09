@@ -23,14 +23,7 @@ update: Msg -> Model -> (Model, Cmd Msg)
 update msg model =
     case msg of
         LaunchHub originatingHub ->
-            let
-                oldRootHub = model.rootHub
-                targetPosition = launch originatingHub model.direction model.force
-                newHub = (newHubAt originatingHub.pos)
-                newAnimatedHub = {newHub | animation = setupAnimation originatingHub.pos targetPosition model}
-                newRootHub = appendChildAt oldRootHub newAnimatedHub (\x -> x == originatingHub)
-            in
-                ({model | rootHub = newRootHub}, Cmd.none)
+                ({model | playerTrees = List.map (updateTreeAfterLaunch model originatingHub) model.playerTrees}, Cmd.none)
         AimRight ->
             let
                 newDirection = model.direction + 15
@@ -53,6 +46,16 @@ update msg model =
                 (updatedAnimations, Cmd.none)
         SelectHub newSelectedHub ->
             ({model | selectedHub = newSelectedHub}, Cmd.none)
+
+updateTreeAfterLaunch : Model -> Hub -> HubTree -> HubTree
+updateTreeAfterLaunch model originatingHub tree =
+    let
+        targetPosition = launch originatingHub model.direction model.force
+        newHub = (newHubAt originatingHub.pos)
+        newAnimatedHub = {newHub | animation = setupAnimation originatingHub.pos targetPosition model}
+        newRootHub = appendChildAt tree newAnimatedHub (\x -> x == originatingHub)
+    in
+        newRootHub
 
 setupAnimation: Position -> Position -> Model -> Maybe AnimatingPosition
 setupAnimation from to model =

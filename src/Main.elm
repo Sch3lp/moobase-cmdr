@@ -9,7 +9,7 @@ import View exposing (..)
 import Subscription exposing (subscriptions)
 
 initialModel: Model
-initialModel = { rootHub = initialHubTree
+initialModel = { playerTrees = [initialHubTreeAt (-200, -200), initialHubTreeAt (200, 200)]
                , direction = 0
                , force = 50
                , currentTime = 0
