@@ -99,7 +99,7 @@ view model =
 createAllCircles : Model -> List (Svg.Svg Msg)
 createAllCircles model = 
     let
-        allHubs = List.concatMap getAllElemsRecursive model.playerTrees
+        allHubs = List.concatMap getAllElemsRecursive <| getPlayerTrees model
         allCords = getAllCords model
     in
         List.map (\hub -> hub2Circle hub model.selectedHub) allHubs ++ List.map cord2View allCords

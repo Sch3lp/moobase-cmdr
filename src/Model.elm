@@ -8,22 +8,68 @@ import Model.Tree exposing (..)
 type alias Angle = Float
 type alias Force = Float
 
+{- Game model -}
 type alias Model =
-    { playerTrees: List HubTree
+    { players: List PlayerState
     , currentTime: TimeStamp
     , direction: Angle
     , force: Force
     , selectedHub: Hub
     }
+getPlayerTrees: Model -> List HubTree
+getPlayerTrees {players} = List.map (\p -> p.network) players
 
+{- Player stuff -}
+type Player
+    = Player1
+    | Player2
+    | Player3
+    | Player4
+
+type alias Energy = Int
+startingEnergy: Energy
+startingEnergy = 7
+
+type alias PlayerState =
+    { player: Player
+    , network: HubTree
+    , energy: Energy
+    }
+getHubTreeForPlayer: PlayerState -> HubTree
+getHubTreeForPlayer player =
+    player.network
+
+initialPlayer: Player -> Position -> PlayerState
+initialPlayer player pos = 
+    { player  = player
+    , network = initialHubTreeAt pos
+    , energy  = startingEnergy
+    }
+
+{- Hub stuff -}
 type alias Hub =
     { pos : Position
     , size : Float
     , animation : Maybe AnimatingPosition
     }
 
+newHubAt: Position -> Hub
+newHubAt pos =
+    { pos = pos
+    , size = hubSize
+    , animation = Nothing
+    }
+
+hubSize: Float
+hubSize = 25
+
+{- HubTree stuff -}
 type alias HubTree = Tree Hub
 
+initialHubTreeAt: Position -> HubTree
+initialHubTreeAt pos = newTree <| newHubAt pos
+
+{- Cord stuff -}
 type alias Cord =
     { from: Hub
     , to: Hub
@@ -33,23 +79,6 @@ newCord: Hub -> Hub -> Cord
 newCord from to =
     { from = from
     , to = to
-    }
-
-hubSize: Float
-hubSize = 25
-
-
-initialHubTree: HubTree
-initialHubTree = initialHubTreeAt (0,0)
-
-initialHubTreeAt: Position -> HubTree
-initialHubTreeAt pos = newTree <| newHubAt pos
-
-newHubAt: Position -> Hub
-newHubAt pos =
-    { pos = pos
-    , size = hubSize
-    , animation = Nothing
     }
 
 launch: Hub -> Angle -> Force -> Position
@@ -68,7 +97,7 @@ calculateLandingPoint (x,y) direction force =
         ( calculateLP x sin direction force, calculateLP y cos (direction + 180) force) -- -180 because fuck you SVG
 
 getAllCords : Model -> List Cord
-getAllCords model = List.concatMap getAllChildCordsRecursive model.playerTrees
+getAllCords model = List.concatMap getAllChildCordsRecursive <| getPlayerTrees model
 
 getAllChildCordsRecursive : HubTree -> List Cord
 getAllChildCordsRecursive (TreeNode hub children) =
@@ -83,7 +112,12 @@ getAllImmediateChildCords hubTree =
         TreeNode hub children -> getAllImmediateChildren hubTree |> List.map (newCord hub)
 
 updateAnimations: Model -> Model
-updateAnimations model = {model | playerTrees = List.map (map (updateAnimationForHub model.currentTime)) model.playerTrees}
+updateAnimations model = 
+    let
+        updateAnimationForPlayerState playerState = { playerState | network = map (updateAnimationForHub model.currentTime) playerState.network }
+        updatedPlayers = List.map updateAnimationForPlayerState model.players
+    in
+        {model | players = updatedPlayers }
 
 updateAnimationForHub: TimeStamp -> Hub -> Hub
 updateAnimationForHub time hub =

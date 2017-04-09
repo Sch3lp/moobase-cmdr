@@ -22,8 +22,7 @@ type Msg
 update: Msg -> Model -> (Model, Cmd Msg)
 update msg model =
     case msg of
-        LaunchHub originatingHub ->
-                ({model | playerTrees = List.map (updateTreeAfterLaunch model originatingHub) model.playerTrees}, Cmd.none)
+        LaunchHub originatingHub -> launchHub model originatingHub
         AimRight ->
             let
                 newDirection = model.direction + 15
@@ -46,6 +45,14 @@ update msg model =
                 (updatedAnimations, Cmd.none)
         SelectHub newSelectedHub ->
             ({model | selectedHub = newSelectedHub}, Cmd.none)
+
+launchHub: Model -> Hub -> (Model, Cmd Msg)
+launchHub model originatingHub = 
+    let
+        updateTreeAfterLaunchForPlayerState playerState = { playerState | network = updateTreeAfterLaunch model originatingHub playerState.network }
+        updatedPlayers = List.map updateTreeAfterLaunchForPlayerState model.players
+    in
+      ({model | players = updatedPlayers}, Cmd.none)
 
 updateTreeAfterLaunch : Model -> Hub -> HubTree -> HubTree
 updateTreeAfterLaunch model originatingHub tree =
