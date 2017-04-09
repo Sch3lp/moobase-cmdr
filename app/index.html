@@ -9491,6 +9491,7 @@ var _sch3lp$moobase_cmdr$View$cord2View = function (cord) {
 		},
 		{ctor: '[]'});
 };
+var _sch3lp$moobase_cmdr$View$worldSize = 2000;
 var _sch3lp$moobase_cmdr$View$hubBorder = 3;
 var _sch3lp$moobase_cmdr$View$renderHub = F2(
 	function (hub, selectedHub) {
@@ -9692,16 +9693,46 @@ var _sch3lp$moobase_cmdr$View$view = function (model) {
 					_elm_lang$svg$Svg$svg,
 					{
 						ctor: '::',
-						_0: _elm_lang$svg$Svg_Attributes$width('400'),
+						_0: _elm_lang$svg$Svg_Attributes$width('100%'),
 						_1: {
 							ctor: '::',
-							_0: _elm_lang$svg$Svg_Attributes$height('400'),
+							_0: _elm_lang$svg$Svg_Attributes$height('100%'),
 							_1: {
 								ctor: '::',
 								_0: _elm_lang$svg$Svg_Attributes$version('1.1'),
 								_1: {
 									ctor: '::',
-									_0: _elm_lang$svg$Svg_Attributes$viewBox('-200 -200 400 400'),
+									_0: _elm_lang$svg$Svg_Attributes$viewBox(
+										A3(
+											_elm_lang$core$List$foldr,
+											F2(
+												function (x, y) {
+													return A2(_elm_lang$core$Basics_ops['++'], x, y);
+												}),
+											'',
+											A2(
+												_elm_lang$core$List$intersperse,
+												' ',
+												A2(
+													_elm_lang$core$List$map,
+													_elm_lang$core$Basics$toString,
+													{
+														ctor: '::',
+														_0: ((0 - _sch3lp$moobase_cmdr$View$worldSize) / 2) | 0,
+														_1: {
+															ctor: '::',
+															_0: ((0 - _sch3lp$moobase_cmdr$View$worldSize) / 2) | 0,
+															_1: {
+																ctor: '::',
+																_0: _sch3lp$moobase_cmdr$View$worldSize,
+																_1: {
+																	ctor: '::',
+																	_0: _sch3lp$moobase_cmdr$View$worldSize,
+																	_1: {ctor: '[]'}
+																}
+															}
+														}
+													})))),
 									_1: {ctor: '[]'}
 								}
 							}
