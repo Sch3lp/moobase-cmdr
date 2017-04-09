@@ -13,7 +13,7 @@ initialModel = { playerTrees = [initialHubTreeAt (-200, -200), initialHubTreeAt 
                , direction = 0
                , force = 50
                , currentTime = 0
-               , selectedHub = extractElem (initialHubTree)
+               , selectedHub = extractElem (initialHubTreeAt (-200, -200))
                }
 
 main : Program Never Model Msg 
