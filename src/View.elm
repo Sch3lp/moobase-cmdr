@@ -21,17 +21,26 @@ posToFloat (x, y) =  (toFloat x, toFloat y)
 hubBorder: Float
 hubBorder = 3
 
-hub2Circle: Hub -> Svg.Svg Msg
-hub2Circle hub = 
-    Svg.circle 
-        [ cx <| toString (Tuple.first  hub.pos)
-        , cy <| toString (Tuple.second hub.pos)
-        , r  <| toString (hub.size - hubBorder)
-        , stroke "red"
-        , strokeWidth <| toString hubBorder
-        , fill "blue"
-        , onClick (SelectHub hub)
-        ] []
+hub2Circle: Hub -> Hub -> Svg.Svg Msg
+hub2Circle hub selectedHub =
+    Svg.circle (renderHub hub selectedHub) []
+
+renderHub: Hub -> Hub -> List (Svg.Attribute Msg)
+renderHub hub selectedHub =
+    let
+        baseAttributes =
+            [ cx <| toString (Tuple.first  hub.pos)
+            , cy <| toString (Tuple.second hub.pos)
+            , r  <| toString (hub.size - hubBorder)
+            , strokeWidth <| toString hubBorder
+            , fill "blue"
+            , onClick (SelectHub hub)
+            ]
+    in
+        if (selectedHub == hub ) then
+            stroke "red" :: baseAttributes
+        else
+            baseAttributes
 
 cord2View: Cord -> Svg.Svg Msg
 cord2View cord =
@@ -73,5 +82,5 @@ createAllCircles model =
         allHubs = getAllElemsRecursive model.rootHub
         allCords = getAllCords model
     in
-        List.map hub2Circle allHubs ++ List.map cord2View allCords
+        List.map (\hub -> hub2Circle hub model.selectedHub) allHubs ++ List.map cord2View allCords
     
