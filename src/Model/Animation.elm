@@ -22,10 +22,6 @@ updateAnimation newTimeStamp animatingPosition =
             (newPosition, Just animatingPosition)
     else (animatingPosition.to, Nothing)
 
-updateAnimationStatus: TimeStamp -> AnimatingPosition -> Maybe AnimatingPosition
-updateAnimationStatus newTimeStamp animatingPosition =
-    if (animatingPosition.animationEnd <= newTimeStamp) then Just animatingPosition else Nothing
-
 absoluteToFraction: Float -> Float -> Float -> Float
 absoluteToFraction low high point = (point - low) / (high - low)
 
