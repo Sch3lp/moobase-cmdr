@@ -9564,6 +9564,39 @@ var _sch3lp$moobase_cmdr$View$createAllCircles = function (model) {
 			allHubs),
 		A2(_elm_lang$core$List$map, _sch3lp$moobase_cmdr$View$cord2View, allCords));
 };
+var _sch3lp$moobase_cmdr$View$renderReticle = F2(
+	function (direction, selectedHub) {
+		var _p1 = A3(_sch3lp$moobase_cmdr$Model$calculateLandingPoint, selectedHub.pos, direction, selectedHub.size);
+		var x = _p1._0;
+		var y = _p1._1;
+		return {
+			ctor: '::',
+			_0: A2(
+				_elm_lang$svg$Svg$circle,
+				{
+					ctor: '::',
+					_0: _elm_lang$svg$Svg_Attributes$cx(
+						_elm_lang$core$Basics$toString(x)),
+					_1: {
+						ctor: '::',
+						_0: _elm_lang$svg$Svg_Attributes$cy(
+							_elm_lang$core$Basics$toString(y)),
+						_1: {
+							ctor: '::',
+							_0: _elm_lang$svg$Svg_Attributes$r(
+								_elm_lang$core$Basics$toString(_sch3lp$moobase_cmdr$View$hubBorder + 1)),
+							_1: {
+								ctor: '::',
+								_0: _elm_lang$svg$Svg_Attributes$fill('red'),
+								_1: {ctor: '[]'}
+							}
+						}
+					}
+				},
+				{ctor: '[]'}),
+			_1: {ctor: '[]'}
+		};
+	});
 var _sch3lp$moobase_cmdr$View$view = function (model) {
 	return A2(
 		_elm_lang$html$Html$div,
@@ -9749,17 +9782,20 @@ var _sch3lp$moobase_cmdr$View$view = function (model) {
 							}
 						}
 					},
-					_sch3lp$moobase_cmdr$View$createAllCircles(model)),
+					A2(
+						_elm_lang$core$Basics_ops['++'],
+						_sch3lp$moobase_cmdr$View$createAllCircles(model),
+						A2(_sch3lp$moobase_cmdr$View$renderReticle, model.direction, model.selectedHub))),
 				_1: {ctor: '[]'}
 			}
 		});
 };
-var _sch3lp$moobase_cmdr$View$posToFloat = function (_p1) {
-	var _p2 = _p1;
+var _sch3lp$moobase_cmdr$View$posToFloat = function (_p2) {
+	var _p3 = _p2;
 	return {
 		ctor: '_Tuple2',
-		_0: _elm_lang$core$Basics$toFloat(_p2._0),
-		_1: _elm_lang$core$Basics$toFloat(_p2._1)
+		_0: _elm_lang$core$Basics$toFloat(_p3._0),
+		_1: _elm_lang$core$Basics$toFloat(_p3._1)
 	};
 };
 var _sch3lp$moobase_cmdr$Subscription$oncePerSecond = {
@@ -9790,7 +9826,9 @@ var _sch3lp$moobase_cmdr$Main$initialModel = {
 	direction: 0,
 	force: 50,
 	currentTime: 0,
-	selectedHub: _sch3lp$moobase_cmdr$Model_Tree$extractElem(_sch3lp$moobase_cmdr$Model$initialHubTree)
+	selectedHub: _sch3lp$moobase_cmdr$Model_Tree$extractElem(
+		_sch3lp$moobase_cmdr$Model$initialHubTreeAt(
+			{ctor: '_Tuple2', _0: -200, _1: -200}))
 };
 var _sch3lp$moobase_cmdr$Main$main = _elm_lang$html$Html$program(
 	{
