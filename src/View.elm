@@ -30,14 +30,6 @@ hub2Circle hub =
         , fill "blue"
         ] []
 
-{- TODO write to SVG
-cord2Form: Cord -> Form
-cord2Form cord =
-    let
-        p = Collage.path [posToFloat cord.from.pos, posToFloat cord.to.pos]
-    in traced defaultLine p
--}
-
 cord2View: Cord -> Svg.Svg msg
 cord2View cord =
     case (cord.from.pos, cord.to.pos)
