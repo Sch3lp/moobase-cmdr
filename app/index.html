@@ -9627,15 +9627,20 @@ var _sch3lp$moobase_cmdr$Model$updateAnimationForHub = F2(
 		}
 	});
 var _sch3lp$moobase_cmdr$Model$updateAnimations = function (model) {
+	var updateAnimationForPlayerState = function (playerState) {
+		return _elm_lang$core$Native_Utils.update(
+			playerState,
+			{
+				network: A2(
+					_sch3lp$moobase_cmdr$Model_Tree$map,
+					_sch3lp$moobase_cmdr$Model$updateAnimationForHub(model.currentTime),
+					playerState.network)
+			});
+	};
+	var updatedPlayers = A2(_elm_lang$core$List$map, updateAnimationForPlayerState, model.players);
 	return _elm_lang$core$Native_Utils.update(
 		model,
-		{
-			playerTrees: A2(
-				_elm_lang$core$List$map,
-				_sch3lp$moobase_cmdr$Model_Tree$map(
-					_sch3lp$moobase_cmdr$Model$updateAnimationForHub(model.currentTime)),
-				model.playerTrees)
-		});
+		{players: updatedPlayers});
 };
 var _sch3lp$moobase_cmdr$Model$calculateLP = F4(
 	function (i, fn, direction, force) {
@@ -9668,16 +9673,6 @@ var _sch3lp$moobase_cmdr$Model$launch = F3(
 	function (hub, direction, force) {
 		return A3(_sch3lp$moobase_cmdr$Model$calculateLandingPoint, hub.pos, direction, force);
 	});
-var _sch3lp$moobase_cmdr$Model$hubSize = 25;
-var _sch3lp$moobase_cmdr$Model$newHubAt = function (pos) {
-	return {pos: pos, size: _sch3lp$moobase_cmdr$Model$hubSize, animation: _elm_lang$core$Maybe$Nothing};
-};
-var _sch3lp$moobase_cmdr$Model$initialHubTreeAt = function (pos) {
-	return _sch3lp$moobase_cmdr$Model_Tree$newTree(
-		_sch3lp$moobase_cmdr$Model$newHubAt(pos));
-};
-var _sch3lp$moobase_cmdr$Model$initialHubTree = _sch3lp$moobase_cmdr$Model$initialHubTreeAt(
-	{ctor: '_Tuple2', _0: 0, _1: 0});
 var _sch3lp$moobase_cmdr$Model$newCord = F2(
 	function (from, to) {
 		return {from: from, to: to};
@@ -9699,12 +9694,48 @@ var _sch3lp$moobase_cmdr$Model$getAllChildCordsRecursive = function (_p5) {
 		cords,
 		A2(_elm_lang$core$List$concatMap, _sch3lp$moobase_cmdr$Model$getAllChildCordsRecursive, _p7));
 };
+var _sch3lp$moobase_cmdr$Model$hubSize = 25;
+var _sch3lp$moobase_cmdr$Model$newHubAt = function (pos) {
+	return {pos: pos, size: _sch3lp$moobase_cmdr$Model$hubSize, animation: _elm_lang$core$Maybe$Nothing};
+};
+var _sch3lp$moobase_cmdr$Model$initialHubTreeAt = function (pos) {
+	return _sch3lp$moobase_cmdr$Model_Tree$newTree(
+		_sch3lp$moobase_cmdr$Model$newHubAt(pos));
+};
+var _sch3lp$moobase_cmdr$Model$getHubTreeForPlayer = function (player) {
+	return player.network;
+};
+var _sch3lp$moobase_cmdr$Model$startingEnergy = 7;
+var _sch3lp$moobase_cmdr$Model$initialPlayer = F2(
+	function (player, pos) {
+		return {
+			player: player,
+			network: _sch3lp$moobase_cmdr$Model$initialHubTreeAt(pos),
+			energy: _sch3lp$moobase_cmdr$Model$startingEnergy
+		};
+	});
+var _sch3lp$moobase_cmdr$Model$getPlayerTrees = function (_p8) {
+	var _p9 = _p8;
+	return A2(
+		_elm_lang$core$List$map,
+		function (p) {
+			return p.network;
+		},
+		_p9.players);
+};
 var _sch3lp$moobase_cmdr$Model$getAllCords = function (model) {
-	return A2(_elm_lang$core$List$concatMap, _sch3lp$moobase_cmdr$Model$getAllChildCordsRecursive, model.playerTrees);
+	return A2(
+		_elm_lang$core$List$concatMap,
+		_sch3lp$moobase_cmdr$Model$getAllChildCordsRecursive,
+		_sch3lp$moobase_cmdr$Model$getPlayerTrees(model));
 };
 var _sch3lp$moobase_cmdr$Model$Model = F5(
 	function (a, b, c, d, e) {
-		return {playerTrees: a, currentTime: b, direction: c, force: d, selectedHub: e};
+		return {players: a, currentTime: b, direction: c, force: d, selectedHub: e};
+	});
+var _sch3lp$moobase_cmdr$Model$PlayerState = F3(
+	function (a, b, c) {
+		return {player: a, network: b, energy: c};
 	});
 var _sch3lp$moobase_cmdr$Model$Hub = F3(
 	function (a, b, c) {
@@ -9714,6 +9745,10 @@ var _sch3lp$moobase_cmdr$Model$Cord = F2(
 	function (a, b) {
 		return {from: a, to: b};
 	});
+var _sch3lp$moobase_cmdr$Model$Player4 = {ctor: 'Player4'};
+var _sch3lp$moobase_cmdr$Model$Player3 = {ctor: 'Player3'};
+var _sch3lp$moobase_cmdr$Model$Player2 = {ctor: 'Player2'};
+var _sch3lp$moobase_cmdr$Model$Player1 = {ctor: 'Player1'};
 var _sch3lp$moobase_cmdr$Update$setupAnimation = F3(
 	function (from, to, model) {
 		return _elm_lang$core$Maybe$Just(
@@ -9736,6 +9771,24 @@ var _sch3lp$moobase_cmdr$Update$updateTreeAfterLaunch = F3(
 				return _elm_lang$core$Native_Utils.eq(x, originatingHub);
 			});
 		return newRootHub;
+	});
+var _sch3lp$moobase_cmdr$Update$launchHub = F2(
+	function (model, originatingHub) {
+		var updateTreeAfterLaunchForPlayerState = function (playerState) {
+			return _elm_lang$core$Native_Utils.update(
+				playerState,
+				{
+					network: A3(_sch3lp$moobase_cmdr$Update$updateTreeAfterLaunch, model, originatingHub, playerState.network)
+				});
+		};
+		var updatedPlayers = A2(_elm_lang$core$List$map, updateTreeAfterLaunchForPlayerState, model.players);
+		return {
+			ctor: '_Tuple2',
+			_0: _elm_lang$core$Native_Utils.update(
+				model,
+				{players: updatedPlayers}),
+			_1: _elm_lang$core$Platform_Cmd$none
+		};
 	});
 var _sch3lp$moobase_cmdr$Update$aimLeft = function (model) {
 	var newDirection = model.direction - 15;
@@ -9766,18 +9819,7 @@ var _sch3lp$moobase_cmdr$Update$update = F2(
 		var _p1 = msg;
 		switch (_p1.ctor) {
 			case 'LaunchHub':
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						model,
-						{
-							playerTrees: A2(
-								_elm_lang$core$List$map,
-								A2(_sch3lp$moobase_cmdr$Update$updateTreeAfterLaunch, model, _p1._0),
-								model.playerTrees)
-						}),
-					_1: _elm_lang$core$Platform_Cmd$none
-				};
+				return A2(_sch3lp$moobase_cmdr$Update$launchHub, model, _p1._0);
 			case 'AimRight':
 				return {
 					ctor: '_Tuple2',
@@ -9844,26 +9886,44 @@ var _sch3lp$moobase_cmdr$Update$AimRight = {ctor: 'AimRight'};
 var _sch3lp$moobase_cmdr$Update$LaunchHub = function (a) {
 	return {ctor: 'LaunchHub', _0: a};
 };
+var _sch3lp$moobase_cmdr$View$getPlayerTreesWithColor = function (_p0) {
+	var _p1 = _p0;
+	return A2(
+		_elm_lang$core$List$map,
+		function (p) {
+			return A2(
+				_sch3lp$moobase_cmdr$Model_Tree$map,
+				function (hub) {
+					return {
+						ctor: '_Tuple2',
+						_0: hub,
+						_1: _elm_lang$core$Native_Utils.eq(p.player, _sch3lp$moobase_cmdr$Model$Player1) ? 'blue' : 'orange'
+					};
+				},
+				p.network);
+		},
+		_p1.players);
+};
 var _sch3lp$moobase_cmdr$View$cord2View = function (cord) {
-	var _p0 = {ctor: '_Tuple2', _0: cord.from.pos, _1: cord.to.pos};
+	var _p2 = {ctor: '_Tuple2', _0: cord.from.pos, _1: cord.to.pos};
 	return A2(
 		_elm_lang$svg$Svg$line,
 		{
 			ctor: '::',
 			_0: _elm_lang$svg$Svg_Attributes$x1(
-				_elm_lang$core$Basics$toString(_p0._0._0)),
+				_elm_lang$core$Basics$toString(_p2._0._0)),
 			_1: {
 				ctor: '::',
 				_0: _elm_lang$svg$Svg_Attributes$y1(
-					_elm_lang$core$Basics$toString(_p0._0._1)),
+					_elm_lang$core$Basics$toString(_p2._0._1)),
 				_1: {
 					ctor: '::',
 					_0: _elm_lang$svg$Svg_Attributes$x2(
-						_elm_lang$core$Basics$toString(_p0._1._0)),
+						_elm_lang$core$Basics$toString(_p2._1._0)),
 					_1: {
 						ctor: '::',
 						_0: _elm_lang$svg$Svg_Attributes$y2(
-							_elm_lang$core$Basics$toString(_p0._1._1)),
+							_elm_lang$core$Basics$toString(_p2._1._1)),
 						_1: {
 							ctor: '::',
 							_0: _elm_lang$html$Html_Attributes$style(
@@ -9886,8 +9946,8 @@ var _sch3lp$moobase_cmdr$View$cord2View = function (cord) {
 };
 var _sch3lp$moobase_cmdr$View$worldSize = 2000;
 var _sch3lp$moobase_cmdr$View$hubBorder = 3;
-var _sch3lp$moobase_cmdr$View$renderHub = F2(
-	function (hub, selectedHub) {
+var _sch3lp$moobase_cmdr$View$renderHub = F3(
+	function (hub, selectedHub, color) {
 		var baseAttributes = {
 			ctor: '::',
 			_0: _elm_lang$svg$Svg_Attributes$cx(
@@ -9908,7 +9968,7 @@ var _sch3lp$moobase_cmdr$View$renderHub = F2(
 							_elm_lang$core$Basics$toString(_sch3lp$moobase_cmdr$View$hubBorder)),
 						_1: {
 							ctor: '::',
-							_0: _elm_lang$svg$Svg_Attributes$fill('blue'),
+							_0: _elm_lang$svg$Svg_Attributes$fill(color),
 							_1: {
 								ctor: '::',
 								_0: _elm_lang$html$Html_Events$onClick(
@@ -9926,31 +9986,35 @@ var _sch3lp$moobase_cmdr$View$renderHub = F2(
 			_1: baseAttributes
 		} : baseAttributes;
 	});
-var _sch3lp$moobase_cmdr$View$hub2Circle = F2(
-	function (hub, selectedHub) {
+var _sch3lp$moobase_cmdr$View$hub2Circle = F3(
+	function (hub, selectedHub, color) {
 		return A2(
 			_elm_lang$svg$Svg$circle,
-			A2(_sch3lp$moobase_cmdr$View$renderHub, hub, selectedHub),
+			A3(_sch3lp$moobase_cmdr$View$renderHub, hub, selectedHub, color),
 			{ctor: '[]'});
 	});
 var _sch3lp$moobase_cmdr$View$createAllCircles = function (model) {
 	var allCords = _sch3lp$moobase_cmdr$Model$getAllCords(model);
-	var allHubs = A2(_elm_lang$core$List$concatMap, _sch3lp$moobase_cmdr$Model_Tree$getAllElemsRecursive, model.playerTrees);
+	var allHubs = A2(
+		_elm_lang$core$List$concatMap,
+		_sch3lp$moobase_cmdr$Model_Tree$getAllElemsRecursive,
+		_sch3lp$moobase_cmdr$View$getPlayerTreesWithColor(model));
 	return A2(
 		_elm_lang$core$Basics_ops['++'],
 		A2(
 			_elm_lang$core$List$map,
-			function (hub) {
-				return A2(_sch3lp$moobase_cmdr$View$hub2Circle, hub, model.selectedHub);
+			function (_p3) {
+				var _p4 = _p3;
+				return A3(_sch3lp$moobase_cmdr$View$hub2Circle, _p4._0, model.selectedHub, _p4._1);
 			},
 			allHubs),
 		A2(_elm_lang$core$List$map, _sch3lp$moobase_cmdr$View$cord2View, allCords));
 };
 var _sch3lp$moobase_cmdr$View$renderReticle = F2(
 	function (direction, selectedHub) {
-		var _p1 = A3(_sch3lp$moobase_cmdr$Model$calculateLandingPoint, selectedHub.pos, direction, selectedHub.size);
-		var x = _p1._0;
-		var y = _p1._1;
+		var _p5 = A3(_sch3lp$moobase_cmdr$Model$calculateLandingPoint, selectedHub.pos, direction, selectedHub.size);
+		var x = _p5._0;
+		var y = _p5._1;
 		return {
 			ctor: '::',
 			_0: A2(
@@ -10172,12 +10236,12 @@ var _sch3lp$moobase_cmdr$View$view = function (model) {
 			}
 		});
 };
-var _sch3lp$moobase_cmdr$View$posToFloat = function (_p2) {
-	var _p3 = _p2;
+var _sch3lp$moobase_cmdr$View$posToFloat = function (_p6) {
+	var _p7 = _p6;
 	return {
 		ctor: '_Tuple2',
-		_0: _elm_lang$core$Basics$toFloat(_p3._0),
-		_1: _elm_lang$core$Basics$toFloat(_p3._1)
+		_0: _elm_lang$core$Basics$toFloat(_p7._0),
+		_1: _elm_lang$core$Basics$toFloat(_p7._1)
 	};
 };
 var _sch3lp$moobase_cmdr$Subscription$keys = {
@@ -10208,13 +10272,17 @@ var _sch3lp$moobase_cmdr$Subscription$subscriptions = function (model) {
 		A2(_elm_lang$core$Basics_ops['++'], _sch3lp$moobase_cmdr$Subscription$selectedSpeed, _sch3lp$moobase_cmdr$Subscription$keys));
 };
 var _sch3lp$moobase_cmdr$Main$initialModel = {
-	playerTrees: {
+	players: {
 		ctor: '::',
-		_0: _sch3lp$moobase_cmdr$Model$initialHubTreeAt(
+		_0: A2(
+			_sch3lp$moobase_cmdr$Model$initialPlayer,
+			_sch3lp$moobase_cmdr$Model$Player1,
 			{ctor: '_Tuple2', _0: -200, _1: -200}),
 		_1: {
 			ctor: '::',
-			_0: _sch3lp$moobase_cmdr$Model$initialHubTreeAt(
+			_0: A2(
+				_sch3lp$moobase_cmdr$Model$initialPlayer,
+				_sch3lp$moobase_cmdr$Model$Player2,
 				{ctor: '_Tuple2', _0: 200, _1: 200}),
 			_1: {ctor: '[]'}
 		}
