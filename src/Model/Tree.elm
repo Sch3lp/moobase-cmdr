@@ -15,12 +15,20 @@ appendChild parent child =
     in
         (TreeNode elem ((TreeNode child []):: existingChildren))
 
-foldOverTree : (a -> b) -> (b -> b -> b) -> Tree a -> b
-foldOverTree valueMapper combiner (TreeNode a children) =
-    List.foldr combiner (valueMapper a) (List.map (foldOverTree valueMapper combiner) children)
+
+appendChildAt: Tree a -> a -> (a -> Bool) -> Tree a
+appendChildAt parent child location =
+    let
+        (TreeNode elem existingChildren) = parent
+    in
+        if (location elem) then
+            appendChild parent child
+        else
+            (TreeNode elem (List.map (\x -> appendChildAt x child location) existingChildren))
 
 findAllElemsRecursive : Tree a -> List a
-findAllElemsRecursive = foldOverTree List.singleton (++)
+findAllElemsRecursive (TreeNode elem children) =
+    elem :: List.concatMap  findAllElemsRecursive children
 
 findAllImmediateChildren : Tree a -> List a
 findAllImmediateChildren (TreeNode _ children) = List.map extractElem children
