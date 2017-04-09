@@ -21,6 +21,9 @@ posToFloat (x, y) =  (toFloat x, toFloat y)
 hubBorder: Float
 hubBorder = 3
 
+worldSize: Int
+worldSize = 2000
+
 hub2Circle: Hub -> Hub -> Svg.Svg Msg
 hub2Circle hub selectedHub =
     Svg.circle (renderHub hub selectedHub) []
@@ -69,10 +72,10 @@ view model =
             , button [ onClick IncrementForce ] [ Html.text "+" ]
             ]
         , svg 
-            [ Svg.Attributes.width  "400"
-            , Svg.Attributes.height "400"
+            [ Svg.Attributes.width  "100%"
+            , Svg.Attributes.height "100%"
             , version "1.1"
-            , viewBox "-200 -200 400 400"
+            , viewBox <| List.foldr (++) "" <| List.intersperse " " <| List.map toString [(-worldSize//2), (-worldSize//2), worldSize, worldSize]
             ] <| createAllCircles model
         ]
 
