@@ -1,7 +1,7 @@
 # Moo base Commander
 🐄  [![Build Status](https://travis-ci.org/Sch3lp/moobase-cmdr.svg?branch=master)](https://travis-ci.org/Sch3lp/moobase-cmdr) 🐄
 
-Check out the demo [here](https://sch3lp.github.io/moobase-cmdr/app)
+Check out the demo: [https://sch3lp.github.io/moobase-cmdr/app/master](https://sch3lp.github.io/moobase-cmdr/app/master) (replace master with the name of the current branch)
 
 
 ## Game rules
