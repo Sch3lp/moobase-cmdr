@@ -1,6 +1,6 @@
 # Moo base Commander
 
-[![Join the chat at https://gitter.im/moobase-cmdr/Lobby](https://badges.gitter.im/moobase-cmdr/Lobby.svg)](https://gitter.im/moobase-cmdr/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+🐄 [![Join the chat at https://gitter.im/moobase-cmdr/Lobby](https://badges.gitter.im/moobase-cmdr/Lobby.svg)](https://gitter.im/moobase-cmdr/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 🐄  [![Build Status](https://travis-ci.org/Sch3lp/moobase-cmdr.svg?branch=master)](https://travis-ci.org/Sch3lp/moobase-cmdr) 🐄
 
 Check out the demo: [https://sch3lp.github.io/moobase-cmdr/app/master](https://sch3lp.github.io/moobase-cmdr/app/master) (replace master with the name of the current branch)
