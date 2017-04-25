@@ -76,7 +76,7 @@ cord2View cord =
 
 view : Model -> Html.Html Msg
 view model =
-    div [Html.Attributes.style [("height", "100%"), ("width", "100%")]]
+    div [Html.Attributes.style [("height", "63%"), ("width", "63%")]]
         [ div []
             [ button [onClick <| LaunchHub model.selectedHub] [Html.text "Launch"]
             , button [onClick AimLeft]   [Html.text "Aim left"]
