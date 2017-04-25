@@ -88,8 +88,8 @@ view model =
             , button [ onClick IncrementForce ] [ Html.text "+" ]
             ]
         , svg 
-            [ Svg.Attributes.width  "100%"
-            , Svg.Attributes.height "100%"
+            [ Svg.Attributes.width  "90%"
+            , Svg.Attributes.height "90%"
             , version "1.1"
             , viewBox <| List.foldr (++) "" <| List.intersperse " " <| List.map toString [(-worldSize//2), (-worldSize//2), worldSize, worldSize]
             ] 
