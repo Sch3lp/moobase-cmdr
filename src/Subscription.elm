@@ -14,6 +14,7 @@ subscriptions model =
    selectedSpeed ++ keys
    |> Sub.batch
 
+selectedSpeed: List (Sub Msg)
 selectedSpeed =
     case Configuration.speed of
         FullSpeed -> fullSpeed

@@ -7,13 +7,28 @@ import Model.Tree exposing (..)
 
 type alias Angle = Float
 type alias Force = Float
+type alias Power = { force: Force, charging: Bool }
+increasePower: Power -> Float -> Power
+increasePower power factor =
+    {power | force = power.force + factor}
+decreasePower: Power -> Float -> Power
+decreasePower power factor =
+    {power | force = power.force - factor}
+toggleChargingPower: Power -> Power
+toggleChargingPower power = 
+    case power.charging of
+      True  -> {power | charging = False}
+      False -> {power | charging = True}
+resetPower: Power -> Power
+resetPower power = {power | force = 0}
+
 
 {- Game model -}
 type alias Model =
     { players: List PlayerState
     , currentTime: TimeStamp
     , direction: Angle
-    , force: Force
+    , power: Power
     , selectedHub: Hub
     }
 getPlayerTrees: Model -> List HubTree
@@ -116,8 +131,9 @@ updateAnimations model =
     let
         updateAnimationForPlayerState playerState = { playerState | network = map (updateAnimationForHub model.currentTime) playerState.network }
         updatedPlayers = List.map updateAnimationForPlayerState model.players
+        updatedPower = increasePowerWhenCharging model.power
     in
-        {model | players = updatedPlayers }
+        {model | players = updatedPlayers, power = updatedPower }
 
 updateAnimationForHub: TimeStamp -> Hub -> Hub
 updateAnimationForHub time hub =
@@ -128,3 +144,10 @@ updateAnimationForHub time hub =
                 (newPos, newAnimation) = updateAnimation time animation
             in
                 {hub | pos = newPos, animation = newAnimation}
+
+increasePowerWhenCharging: Power -> Power
+increasePowerWhenCharging power = 
+    case power.charging of
+      True -> increasePower power 2
+      False -> power
+        

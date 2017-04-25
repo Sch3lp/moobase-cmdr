@@ -11,7 +11,7 @@ import Subscription exposing (subscriptions)
 initialModel: Model
 initialModel = { players = [initialPlayer Player1 (-200, -200), initialPlayer Player2 (200, 200)]
                , direction = 0
-               , force = 50
+               , power = { force = 50, charging = False}
                , currentTime = 0
                , selectedHub = extractElem (initialHubTreeAt (-200, -200))
                }

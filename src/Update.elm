@@ -23,15 +23,16 @@ type Msg
 update: Msg -> Model -> (Model, Cmd Msg)
 update msg model =
     case msg of
-        LaunchHub originatingHub -> launchHub model originatingHub
+        LaunchHub originatingHub -> 
+            (launchHub model originatingHub, Cmd.none)
         AimRight ->
             (aimRight model, Cmd.none)
         AimLeft ->
             (aimLeft model, Cmd.none)
         IncrementForce ->
-            ({model | force = model.force + 15}, Cmd.none)
+            (incrementForce model, Cmd.none)
         DecrementForce ->
-            ({model | force = model.force - 15}, Cmd.none)
+            (decrementForce model, Cmd.none)
         Tick newTime ->
             let
                 updatedTime = {model | currentTime = newTime}
@@ -43,30 +44,62 @@ update msg model =
         KeyPress keyCode ->
             (handleKeyPress keyCode model, Cmd.none)
 
+incrementForce: Model -> Model
+incrementForce model =
+    { model | power = increasePower model.power 15 }
+
+decrementForce: Model -> Model
+decrementForce model =
+    { model | power = decreasePower model.power 15 }
+
+
+aimRight: Model -> Model
 aimRight model =
     let
         newDirection = model.direction + 15
     in
         {model | direction = newDirection}
 
+aimLeft: Model -> Model
 aimLeft model =
     let
         newDirection = model.direction - 15
     in
         {model | direction = newDirection}
 
-launchHub: Model -> Hub -> (Model, Cmd Msg)
+
+toggleChargeOrLaunch: Model -> Model
+toggleChargeOrLaunch model =
+    toggleCharge model |> launchIfChargingStopped
+
+toggleCharge: Model -> Model
+toggleCharge model = 
+    let
+        newPower = increasePower model.power 2 |> toggleChargingPower
+    in
+      {model | power = newPower}
+
+launchIfChargingStopped: Model -> Model
+launchIfChargingStopped model =
+    case model.power.charging of
+        True -> model
+        False -> launchHub model model.selectedHub
+    
+
+
+launchHub: Model -> Hub -> Model
 launchHub model originatingHub = 
     let
         updateTreeAfterLaunchForPlayerState playerState = { playerState | network = updateTreeAfterLaunch model originatingHub playerState.network }
         updatedPlayers = List.map updateTreeAfterLaunchForPlayerState model.players
+        updatedPower = resetPower model.power
     in
-      ({model | players = updatedPlayers}, Cmd.none)
+      {model | players = updatedPlayers, power = updatedPower}
 
 updateTreeAfterLaunch : Model -> Hub -> HubTree -> HubTree
 updateTreeAfterLaunch model originatingHub tree =
     let
-        targetPosition = launch originatingHub model.direction model.force
+        targetPosition = launch originatingHub model.direction model.power.force
         newHub = (newHubAt originatingHub.pos)
         newAnimatedHub = {newHub | animation = setupAnimation originatingHub.pos targetPosition model}
         newRootHub = appendChildAt tree newAnimatedHub (\x -> x == originatingHub)
@@ -88,4 +121,5 @@ handleKeyPress keycode model =
   case keycode of
     37 -> aimLeft model
     39 -> aimRight model
+    32 -> toggleChargeOrLaunch model
     _ -> model
