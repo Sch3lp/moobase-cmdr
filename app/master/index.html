@@ -9626,22 +9626,6 @@ var _sch3lp$moobase_cmdr$Model$updateAnimationForHub = F2(
 				{pos: newPos, animation: newAnimation});
 		}
 	});
-var _sch3lp$moobase_cmdr$Model$updateAnimations = function (model) {
-	var updateAnimationForPlayerState = function (playerState) {
-		return _elm_lang$core$Native_Utils.update(
-			playerState,
-			{
-				network: A2(
-					_sch3lp$moobase_cmdr$Model_Tree$map,
-					_sch3lp$moobase_cmdr$Model$updateAnimationForHub(model.currentTime),
-					playerState.network)
-			});
-	};
-	var updatedPlayers = A2(_elm_lang$core$List$map, updateAnimationForPlayerState, model.players);
-	return _elm_lang$core$Native_Utils.update(
-		model,
-		{players: updatedPlayers});
-};
 var _sch3lp$moobase_cmdr$Model$calculateLP = F4(
 	function (i, fn, direction, force) {
 		return A2(
@@ -9729,9 +9713,67 @@ var _sch3lp$moobase_cmdr$Model$getAllCords = function (model) {
 		_sch3lp$moobase_cmdr$Model$getAllChildCordsRecursive,
 		_sch3lp$moobase_cmdr$Model$getPlayerTrees(model));
 };
+var _sch3lp$moobase_cmdr$Model$resetPower = function (power) {
+	return _elm_lang$core$Native_Utils.update(
+		power,
+		{force: 0});
+};
+var _sch3lp$moobase_cmdr$Model$toggleChargingPower = function (power) {
+	var _p10 = power.charging;
+	if (_p10 === true) {
+		return _elm_lang$core$Native_Utils.update(
+			power,
+			{charging: false});
+	} else {
+		return _elm_lang$core$Native_Utils.update(
+			power,
+			{charging: true});
+	}
+};
+var _sch3lp$moobase_cmdr$Model$decreasePower = F2(
+	function (power, factor) {
+		return _elm_lang$core$Native_Utils.update(
+			power,
+			{force: power.force - factor});
+	});
+var _sch3lp$moobase_cmdr$Model$increasePower = F2(
+	function (power, factor) {
+		return _elm_lang$core$Native_Utils.update(
+			power,
+			{force: power.force + factor});
+	});
+var _sch3lp$moobase_cmdr$Model$increasePowerWhenCharging = function (power) {
+	var _p11 = power.charging;
+	if (_p11 === true) {
+		return A2(_sch3lp$moobase_cmdr$Model$increasePower, power, 2);
+	} else {
+		return power;
+	}
+};
+var _sch3lp$moobase_cmdr$Model$updateAnimations = function (model) {
+	var updatedPower = _sch3lp$moobase_cmdr$Model$increasePowerWhenCharging(model.power);
+	var updateAnimationForPlayerState = function (playerState) {
+		return _elm_lang$core$Native_Utils.update(
+			playerState,
+			{
+				network: A2(
+					_sch3lp$moobase_cmdr$Model_Tree$map,
+					_sch3lp$moobase_cmdr$Model$updateAnimationForHub(model.currentTime),
+					playerState.network)
+			});
+	};
+	var updatedPlayers = A2(_elm_lang$core$List$map, updateAnimationForPlayerState, model.players);
+	return _elm_lang$core$Native_Utils.update(
+		model,
+		{players: updatedPlayers, power: updatedPower});
+};
+var _sch3lp$moobase_cmdr$Model$Power = F2(
+	function (a, b) {
+		return {force: a, charging: b};
+	});
 var _sch3lp$moobase_cmdr$Model$Model = F5(
 	function (a, b, c, d, e) {
-		return {players: a, currentTime: b, direction: c, force: d, selectedHub: e};
+		return {players: a, currentTime: b, direction: c, power: d, selectedHub: e};
 	});
 var _sch3lp$moobase_cmdr$Model$PlayerState = F3(
 	function (a, b, c) {
@@ -9757,7 +9799,7 @@ var _sch3lp$moobase_cmdr$Update$setupAnimation = F3(
 var _sch3lp$moobase_cmdr$Update$updateTreeAfterLaunch = F3(
 	function (model, originatingHub, tree) {
 		var newHub = _sch3lp$moobase_cmdr$Model$newHubAt(originatingHub.pos);
-		var targetPosition = A3(_sch3lp$moobase_cmdr$Model$launch, originatingHub, model.direction, model.force);
+		var targetPosition = A3(_sch3lp$moobase_cmdr$Model$launch, originatingHub, model.direction, model.power.force);
 		var newAnimatedHub = _elm_lang$core$Native_Utils.update(
 			newHub,
 			{
@@ -9774,6 +9816,7 @@ var _sch3lp$moobase_cmdr$Update$updateTreeAfterLaunch = F3(
 	});
 var _sch3lp$moobase_cmdr$Update$launchHub = F2(
 	function (model, originatingHub) {
+		var updatedPower = _sch3lp$moobase_cmdr$Model$resetPower(model.power);
 		var updateTreeAfterLaunchForPlayerState = function (playerState) {
 			return _elm_lang$core$Native_Utils.update(
 				playerState,
@@ -9782,14 +9825,29 @@ var _sch3lp$moobase_cmdr$Update$launchHub = F2(
 				});
 		};
 		var updatedPlayers = A2(_elm_lang$core$List$map, updateTreeAfterLaunchForPlayerState, model.players);
-		return {
-			ctor: '_Tuple2',
-			_0: _elm_lang$core$Native_Utils.update(
-				model,
-				{players: updatedPlayers}),
-			_1: _elm_lang$core$Platform_Cmd$none
-		};
+		return _elm_lang$core$Native_Utils.update(
+			model,
+			{players: updatedPlayers, power: updatedPower});
 	});
+var _sch3lp$moobase_cmdr$Update$launchIfChargingStopped = function (model) {
+	var _p0 = model.power.charging;
+	if (_p0 === true) {
+		return model;
+	} else {
+		return A2(_sch3lp$moobase_cmdr$Update$launchHub, model, model.selectedHub);
+	}
+};
+var _sch3lp$moobase_cmdr$Update$toggleCharge = function (model) {
+	var newPower = _sch3lp$moobase_cmdr$Model$toggleChargingPower(
+		A2(_sch3lp$moobase_cmdr$Model$increasePower, model.power, 2));
+	return _elm_lang$core$Native_Utils.update(
+		model,
+		{power: newPower});
+};
+var _sch3lp$moobase_cmdr$Update$toggleChargeOrLaunch = function (model) {
+	return _sch3lp$moobase_cmdr$Update$launchIfChargingStopped(
+		_sch3lp$moobase_cmdr$Update$toggleCharge(model));
+};
 var _sch3lp$moobase_cmdr$Update$aimLeft = function (model) {
 	var newDirection = model.direction - 15;
 	return _elm_lang$core$Native_Utils.update(
@@ -9804,22 +9862,42 @@ var _sch3lp$moobase_cmdr$Update$aimRight = function (model) {
 };
 var _sch3lp$moobase_cmdr$Update$handleKeyPress = F2(
 	function (keycode, model) {
-		var _p0 = keycode;
-		switch (_p0) {
+		var _p1 = keycode;
+		switch (_p1) {
 			case 37:
 				return _sch3lp$moobase_cmdr$Update$aimLeft(model);
 			case 39:
 				return _sch3lp$moobase_cmdr$Update$aimRight(model);
+			case 32:
+				return _sch3lp$moobase_cmdr$Update$toggleChargeOrLaunch(model);
 			default:
 				return model;
 		}
 	});
+var _sch3lp$moobase_cmdr$Update$decrementForce = function (model) {
+	return _elm_lang$core$Native_Utils.update(
+		model,
+		{
+			power: A2(_sch3lp$moobase_cmdr$Model$decreasePower, model.power, 15)
+		});
+};
+var _sch3lp$moobase_cmdr$Update$incrementForce = function (model) {
+	return _elm_lang$core$Native_Utils.update(
+		model,
+		{
+			power: A2(_sch3lp$moobase_cmdr$Model$increasePower, model.power, 15)
+		});
+};
 var _sch3lp$moobase_cmdr$Update$update = F2(
 	function (msg, model) {
-		var _p1 = msg;
-		switch (_p1.ctor) {
+		var _p2 = msg;
+		switch (_p2.ctor) {
 			case 'LaunchHub':
-				return A2(_sch3lp$moobase_cmdr$Update$launchHub, model, _p1._0);
+				return {
+					ctor: '_Tuple2',
+					_0: A2(_sch3lp$moobase_cmdr$Update$launchHub, model, _p2._0),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
 			case 'AimRight':
 				return {
 					ctor: '_Tuple2',
@@ -9835,23 +9913,19 @@ var _sch3lp$moobase_cmdr$Update$update = F2(
 			case 'IncrementForce':
 				return {
 					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						model,
-						{force: model.force + 15}),
+					_0: _sch3lp$moobase_cmdr$Update$incrementForce(model),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'DecrementForce':
 				return {
 					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						model,
-						{force: model.force - 15}),
+					_0: _sch3lp$moobase_cmdr$Update$decrementForce(model),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'Tick':
 				var updatedTime = _elm_lang$core$Native_Utils.update(
 					model,
-					{currentTime: _p1._0});
+					{currentTime: _p2._0});
 				var updatedAnimations = _sch3lp$moobase_cmdr$Model$updateAnimations(updatedTime);
 				return {ctor: '_Tuple2', _0: updatedAnimations, _1: _elm_lang$core$Platform_Cmd$none};
 			case 'SelectHub':
@@ -9859,13 +9933,13 @@ var _sch3lp$moobase_cmdr$Update$update = F2(
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
-						{selectedHub: _p1._0}),
+						{selectedHub: _p2._0}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			default:
 				return {
 					ctor: '_Tuple2',
-					_0: A2(_sch3lp$moobase_cmdr$Update$handleKeyPress, _p1._0, model),
+					_0: A2(_sch3lp$moobase_cmdr$Update$handleKeyPress, _p2._0, model),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 		}
@@ -10151,7 +10225,7 @@ var _sch3lp$moobase_cmdr$View$view = function (model) {
 												{
 													ctor: '::',
 													_0: _elm_lang$html$Html$text(
-														_elm_lang$core$Basics$toString(model.force)),
+														_elm_lang$core$Basics$toString(model.power.force)),
 													_1: {ctor: '[]'}
 												}),
 											_1: {
@@ -10288,7 +10362,7 @@ var _sch3lp$moobase_cmdr$Main$initialModel = {
 		}
 	},
 	direction: 0,
-	force: 50,
+	power: {force: 50, charging: false},
 	currentTime: 0,
 	selectedHub: _sch3lp$moobase_cmdr$Model_Tree$extractElem(
 		_sch3lp$moobase_cmdr$Model$initialHubTreeAt(
