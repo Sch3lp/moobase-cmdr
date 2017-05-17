@@ -84,7 +84,7 @@ view model =
             , button [onClick AimRight]  [Html.text "Aim right"]
             , span [] [ Html.text "Force: " ]
             , button [ onClick DecrementForce ] [ Html.text "-" ]
-            , span [] [ Html.text (toString model.power.force) ]
+            , span [] [ Html.text (toString <| round <| model.power.force) ]
             , button [ onClick IncrementForce ] [ Html.text "+" ]
             ]
         , svg 
