@@ -16,9 +16,7 @@ decreasePower power factor =
     {power | force = power.force - factor}
 toggleChargingPower: Power -> Power
 toggleChargingPower power = 
-    case power.charging of
-      True  -> {power | charging = False}
-      False -> {power | charging = True}
+      {power | charging = not power.charging}
 resetPower: Power -> Power
 resetPower power = {power | force = 0}
 
