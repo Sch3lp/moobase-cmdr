@@ -35,8 +35,7 @@ update msg model =
             (decrementForce model, Cmd.none)
         Tick newTime ->
             let
-                updatedTime = {model | currentTime = newTime}
-                updatedAnimations = updateAnimations updatedTime
+                updatedAnimations = updateAfterTimePassed newTime model
             in
                 (updatedAnimations, Cmd.none)
         SelectHub newSelectedHub ->

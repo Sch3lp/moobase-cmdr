@@ -124,6 +124,11 @@ getAllImmediateChildCords hubTree =
     case hubTree of
         TreeNode hub children -> getAllImmediateChildren hubTree |> List.map (newCord hub)
 
+updateAfterTimePassed: TimeStamp -> Model -> Model
+updateAfterTimePassed newTime model =
+    {model | currentTime = newTime}
+     |> updateAnimations
+
 updateAnimations: Model -> Model
 updateAnimations model = 
     let
