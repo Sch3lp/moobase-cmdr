@@ -128,15 +128,15 @@ updateAfterTimePassed: TimeInfo -> Model -> Model
 updateAfterTimePassed time model =
     {model | currentTime = time.newTime}
      |> updateAnimations
+     |> setPower (increasePowerWhenCharging model.power)
 
 updateAnimations: Model -> Model
 updateAnimations model = 
     let
         updateAnimationForPlayerState playerState = { playerState | network = map (updateAnimationForHub model.currentTime) playerState.network }
         updatedPlayers = List.map updateAnimationForPlayerState model.players
-        updatedPower = increasePowerWhenCharging model.power
     in
-        {model | players = updatedPlayers, power = updatedPower }
+        {model | players = updatedPlayers }
 
 updateAnimationForHub: TimeStamp -> Hub -> Hub
 updateAnimationForHub time hub =
@@ -147,6 +147,9 @@ updateAnimationForHub time hub =
                 (newPos, newAnimation) = updateAnimation time animation
             in
                 {hub | pos = newPos, animation = newAnimation}
+
+setPower: Power -> Model -> Model
+setPower newPower model = {model | power = newPower }
 
 increasePowerWhenCharging: Power -> Power
 increasePowerWhenCharging power = 
