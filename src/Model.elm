@@ -5,6 +5,8 @@ import Model.Position exposing (..)
 import Model.Time exposing (..)
 import Model.Tree exposing (..)
 
+import Time exposing (inSeconds)
+
 type alias Angle = Float
 type alias Force = Float
 type alias Power = { force: Force, charging: Bool }
@@ -128,7 +130,7 @@ updateAfterTimePassed: TimeInfo -> Model -> Model
 updateAfterTimePassed time model =
     {model | currentTime = time.newTime}
      |> updateAnimations
-     |> setPower (increasePowerWhenCharging model.power)
+     |> setPower (increasePowerWhenCharging time model.power)
 
 updateAnimations: Model -> Model
 updateAnimations model = 
@@ -151,9 +153,11 @@ updateAnimationForHub time hub =
 setPower: Power -> Model -> Model
 setPower newPower model = {model | power = newPower }
 
-increasePowerWhenCharging: Power -> Power
-increasePowerWhenCharging power = 
+powerIncreasePerSecond: Force
+powerIncreasePerSecond = 200
+
+increasePowerWhenCharging: TimeInfo -> Power -> Power
+increasePowerWhenCharging time power =
     case power.charging of
-      True -> increasePower power 2
+      True -> increasePower power (powerIncreasePerSecond * (time.delta |> inSeconds))
       False -> power
-        
