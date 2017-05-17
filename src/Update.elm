@@ -75,7 +75,7 @@ toggleChargeOrLaunch model =
 toggleCharge: Model -> Model
 toggleCharge model = 
     let
-        newPower = increasePower model.power 2 |> toggleChargingPower
+        newPower = model.power |> toggleChargingPower
     in
       {model | power = newPower}
 
